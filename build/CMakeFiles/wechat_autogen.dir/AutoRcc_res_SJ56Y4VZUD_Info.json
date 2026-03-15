@@ -1,0 +1,28 @@
+{
+	"BUILD_DIR" : "/home/eai/demo/weChat/build/wechat_autogen",
+	"CMAKE_BINARY_DIR" : "/home/eai/demo/weChat/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/eai/demo/weChat/build",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/eai/demo/weChat/client",
+	"CMAKE_SOURCE_DIR" : "/home/eai/demo/weChat/client",
+	"GENERATOR" : "Unix Makefiles",
+	"INCLUDE_DIR" : "/home/eai/demo/weChat/build/wechat_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/eai/demo/weChat/client/Resource/style/styleSheets.qss",
+		"/home/eai/demo/weChat/client/Resource/res/qq.png",
+		"/home/eai/demo/weChat/client/Resource/res/chat_icon_press.png",
+		"/home/eai/demo/weChat/client/Resource/res/\u4e8c\u6b21\u5143b.png",
+		"/home/eai/demo/weChat/client/Resource/res/app_icon.png",
+		"/home/eai/demo/weChat/client/Resource/res/\u4e8c\u6b21\u5143.png"
+	],
+	"LOCK_FILE" : "/home/eai/demo/weChat/build/CMakeFiles/wechat_autogen.dir/AutoRcc_res_SJ56Y4VZUD_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "res" ],
+	"OUTPUT_CHECKSUM" : "SJ56Y4VZUD",
+	"OUTPUT_NAME" : "qrc_res.cpp",
+	"RCC_EXECUTABLE" : "/usr/lib/qt5/bin/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/eai/demo/weChat/build/CMakeFiles/wechat_autogen.dir/AutoRcc_res_SJ56Y4VZUD_Used.txt",
+	"SOURCE" : "/home/eai/demo/weChat/client/Resource/res.qrc",
+	"VERBOSITY" : 0
+}

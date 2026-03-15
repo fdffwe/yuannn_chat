@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/home/eai/demo/weChat/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -I/home/eai/demo/weChat/build/wechat_autogen/include -I/home/eai/demo/weChat/client/Headers -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -g -fPIC -o CMakeFiles/wechat.dir/wechat_autogen/mocs_compilation.cpp.o -c /home/eai/demo/weChat/build/wechat_autogen/mocs_compilation.cpp",
+  "file": "/home/eai/demo/weChat/build/wechat_autogen/mocs_compilation.cpp",
+  "output": "CMakeFiles/wechat.dir/wechat_autogen/mocs_compilation.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -I/home/eai/demo/weChat/build/wechat_autogen/include -I/home/eai/demo/weChat/client/Headers -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -g -fPIC -o CMakeFiles/wechat.dir/Sources/Login.cpp.o -c /home/eai/demo/weChat/client/Sources/Login.cpp",
+  "file": "/home/eai/demo/weChat/client/Sources/Login.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/Login.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -I/home/eai/demo/weChat/build/wechat_autogen/include -I/home/eai/demo/weChat/client/Headers -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -g -fPIC -o CMakeFiles/wechat.dir/Sources/MainWindow.cpp.o -c /home/eai/demo/weChat/client/Sources/MainWindow.cpp",
+  "file": "/home/eai/demo/weChat/client/Sources/MainWindow.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/MainWindow.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -I/home/eai/demo/weChat/build/wechat_autogen/include -I/home/eai/demo/weChat/client/Headers -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -g -fPIC -o CMakeFiles/wechat.dir/Sources/RegisterDialog.cpp.o -c /home/eai/demo/weChat/client/Sources/RegisterDialog.cpp",
+  "file": "/home/eai/demo/weChat/client/Sources/RegisterDialog.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/RegisterDialog.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -I/home/eai/demo/weChat/build/wechat_autogen/include -I/home/eai/demo/weChat/client/Headers -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -g -fPIC -o CMakeFiles/wechat.dir/Sources/Global.cpp.o -c /home/eai/demo/weChat/client/Sources/Global.cpp",
+  "file": "/home/eai/demo/weChat/client/Sources/Global.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/Global.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -I/home/eai/demo/weChat/build/wechat_autogen/include -I/home/eai/demo/weChat/client/Headers -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -g -fPIC -o CMakeFiles/wechat.dir/Sources/main.cpp.o -c /home/eai/demo/weChat/client/Sources/main.cpp",
+  "file": "/home/eai/demo/weChat/client/Sources/main.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/main.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -I/home/eai/demo/weChat/build/wechat_autogen/include -I/home/eai/demo/weChat/client/Headers -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -g -fPIC -o CMakeFiles/wechat.dir/Sources/HttpMgr.cpp.o -c /home/eai/demo/weChat/client/Sources/HttpMgr.cpp",
+  "file": "/home/eai/demo/weChat/client/Sources/HttpMgr.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/HttpMgr.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/build",
+  "command": "/usr/bin/g++ -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_SQL_LIB -DQT_WIDGETS_LIB -I/home/eai/demo/weChat/build/wechat_autogen/include -I/home/eai/demo/weChat/client/Headers -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt5/QtSql -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -g -fPIC -o CMakeFiles/wechat.dir/wechat_autogen/SJ56Y4VZUD/qrc_res.cpp.o -c /home/eai/demo/weChat/build/wechat_autogen/SJ56Y4VZUD/qrc_res.cpp",
+  "file": "/home/eai/demo/weChat/build/wechat_autogen/SJ56Y4VZUD/qrc_res.cpp",
+  "output": "CMakeFiles/wechat.dir/wechat_autogen/SJ56Y4VZUD/qrc_res.cpp.o"
+}
+]

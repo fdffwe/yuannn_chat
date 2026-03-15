@@ -1,0 +1,20 @@
+/* 无需编译的，运行之前的代码，直接可以看见效果的 */
+
+QDialog#Login, QDialog#RegisterDialog {
+    background-color: white;
+    
+}   
+
+
+/* 
+    做一个 qss 的状态切换
+    [] 在这里面表示状态
+*/
+
+#err_label[state='normal']{
+    color: green;
+}
+
+#err_label[state='err']{
+    color: red;
+}

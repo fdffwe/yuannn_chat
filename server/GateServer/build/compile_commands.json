@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/home/eai/demo/weChat/server/GataServer/build",
+  "command": "/usr/bin/clang++-18 -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -I/home/eai/demo/weChat/server/GataServer/Headers -I/usr/include/jsoncpp -g -o CMakeFiles/wechat.dir/Sources/main.cpp.o -c /home/eai/demo/weChat/server/GataServer/Sources/main.cpp",
+  "file": "/home/eai/demo/weChat/server/GataServer/Sources/main.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/main.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/server/GataServer/build",
+  "command": "/usr/bin/clang++-18 -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -I/home/eai/demo/weChat/server/GataServer/Headers -I/usr/include/jsoncpp -g -o CMakeFiles/wechat.dir/Sources/Server.cpp.o -c /home/eai/demo/weChat/server/GataServer/Sources/Server.cpp",
+  "file": "/home/eai/demo/weChat/server/GataServer/Sources/Server.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/Server.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/server/GataServer/build",
+  "command": "/usr/bin/clang++-18 -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -I/home/eai/demo/weChat/server/GataServer/Headers -I/usr/include/jsoncpp -g -o CMakeFiles/wechat.dir/Sources/HttpConnection.cpp.o -c /home/eai/demo/weChat/server/GataServer/Sources/HttpConnection.cpp",
+  "file": "/home/eai/demo/weChat/server/GataServer/Sources/HttpConnection.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/HttpConnection.cpp.o"
+},
+{
+  "directory": "/home/eai/demo/weChat/server/GataServer/build",
+  "command": "/usr/bin/clang++-18 -DBOOST_ATOMIC_DYN_LINK -DBOOST_ATOMIC_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_FILESYSTEM_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -I/home/eai/demo/weChat/server/GataServer/Headers -I/usr/include/jsoncpp -g -o CMakeFiles/wechat.dir/Sources/LogicSystem.cpp.o -c /home/eai/demo/weChat/server/GataServer/Sources/LogicSystem.cpp",
+  "file": "/home/eai/demo/weChat/server/GataServer/Sources/LogicSystem.cpp",
+  "output": "CMakeFiles/wechat.dir/Sources/LogicSystem.cpp.o"
+}
+]

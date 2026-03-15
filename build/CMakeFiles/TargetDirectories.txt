@@ -1,0 +1,5 @@
+/home/eai/demo/weChat/build/CMakeFiles/wechat.dir
+/home/eai/demo/weChat/build/CMakeFiles/edit_cache.dir
+/home/eai/demo/weChat/build/CMakeFiles/rebuild_cache.dir
+/home/eai/demo/weChat/build/CMakeFiles/wechat_autogen_timestamp_deps.dir
+/home/eai/demo/weChat/build/CMakeFiles/wechat_autogen.dir
