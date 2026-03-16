@@ -5,3 +5,6 @@ build/
 .vscode/
 # Ignore build directories anywhere
 build/
+
+*.json
+node_modules/
