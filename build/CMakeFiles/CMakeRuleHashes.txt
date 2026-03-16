@@ -1,5 +1,0 @@
-# Hashes of file build rules.
-29238cb5b8076ad6b13dfa2b23da360d CMakeFiles/wechat_autogen
-29238cb5b8076ad6b13dfa2b23da360d CMakeFiles/wechat_autogen_timestamp_deps
-310e0dcad03d97497b0d675c3d9e5d28 wechat_autogen/SJ56Y4VZUD/qrc_res.cpp
-475c9ab40e137a0e0fe3e3c748648e0a wechat_autogen/timestamp

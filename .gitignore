@@ -1,0 +1,4 @@
+.vscode/
+.build/
+# ignore build directories anywhere in the repo
+build/

@@ -1,3 +1,0 @@
-/home/eai/demo/weChat/server/GataServer/build/CMakeFiles/wechat.dir
-/home/eai/demo/weChat/server/GataServer/build/CMakeFiles/edit_cache.dir
-/home/eai/demo/weChat/server/GataServer/build/CMakeFiles/rebuild_cache.dir
