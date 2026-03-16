@@ -14,6 +14,11 @@ find_package(Boost REQUIRED COMPONENTS
     filesystem
 )
 
+# 查找依赖包 gRPC
+find_package(Protobuf REQUIRED)
+find_package(gRPC REQUIRED)
+find_package(Threads REQUIRED)
+
 set(JSON_DIR /usr/include/jsoncpp)
 
 set(Sources 
@@ -21,12 +26,18 @@ set(Sources
     Sources/Server.cpp
     Sources/HttpConnection.cpp
     Sources/LogicSystem.cpp
+    Sources/VarifyGrpcClient.cpp
+    Sources/message.pb.cc
+    Sources/message.grpc.pb.cc
+    Sources/ConfigMgr.cpp
 
 )
 set(Headers 
     Headers/Server.hpp
     Headers/HttpConnection.hpp
     Headers/LogicSystem.hpp
+    Headers/message.pb.h
+    Headers/message.grpc.pb.h
 )
 
 
@@ -37,6 +48,7 @@ add_executable(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/Headers
+    ${CMAKE_SOURCE_DIR}/Sources
     ${JSON_DIR}
 )
 
@@ -44,4 +56,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Boost::system
     Boost::filesystem
     jsoncpp 
+    gRPC::grpc++
+    protobuf::libprotobuf
+    Threads::Threads
 )

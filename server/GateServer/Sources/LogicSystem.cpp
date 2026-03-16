@@ -1,5 +1,6 @@
 #include"LogicSystem.hpp"
 #include"HttpConnection.hpp"
+#include"VarifyGrpcClient.hpp"
 
 
 
@@ -21,33 +22,35 @@ LogicSystem::LogicSystem(){
 
     });
 
-    // 注册 POST 
-    // 为啥呢： 因为要传 邮箱
+    // 注册 POST - 获取验证码
     regPost("/get_verifycode",[](std::shared_ptr<HttpConnection> connection){
-        
         auto strBody = beast::buffers_to_string(connection->_request.body().data());
         std::cout << "receive data is " << strBody << std::endl;
 
-        // 设置回应头
-        connection->_response.set(http::field::content_type, "application/json"); 
-        Json::Value root,srcRoot;
-        Json::Reader reader; 
+        connection->_response.set(http::field::content_type, "application/json");
+        Json::Value root, srcRoot;
+        Json::Reader reader;
 
-        bool parseSuccess = reader.parse(strBody,srcRoot); 
-        if(!parseSuccess){
-            std::cout << "failed to parse Json data! " << std::endl; 
-            root["error"] = ErrorCodes::ERROR_JSON; 
-            beast::ostream(connection->_response.body()) << root.toStyledString(); 
+        bool parseSuccess = reader.parse(strBody, srcRoot);
+        if (!parseSuccess) {
+            std::cout << "failed to parse Json data! " << std::endl;
+            root["error"] = ErrorCodes::ERROR_JSON;
+            beast::ostream(connection->_response.body()) << root.toStyledString();
             return;
         }
-        std::string  email = srcRoot["email"].asString(); 
-        std::cout << "email is " << email << std::endl; 
 
-        root["email"] = email ;
-        root["error"] = 0; 
+        std::string email = srcRoot["email"].asString();
+        std::cout << "email is " << email << std::endl;
 
-        beast::ostream(connection->_response.body()) << root.toStyledString() << std::endl; 
-    }); 
+        // 调用 gRPC 客户端获取验证码
+        GetVarifyRsp rsp = VerifyGrpcClient::getInstance()->GetVarifyCode(email);
+
+        root["error"] = rsp.error();
+        root["email"] = rsp.email();
+        root["code"] = rsp.code();
+
+        beast::ostream(connection->_response.body()) << root.toStyledString() << std::endl;
+    });
 }
 
 
