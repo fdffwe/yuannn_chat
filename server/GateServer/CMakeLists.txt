@@ -26,16 +26,20 @@ set(Sources
     Sources/Server.cpp
     Sources/HttpConnection.cpp
     Sources/LogicSystem.cpp
-    Sources/VarifyGrpcClient.cpp
+    Sources/AsioIOServicePool.cpp
+    Sources/VerifyGrpcClient.cpp
+    Sources/ConfigMgr.cpp
     Sources/message.pb.cc
     Sources/message.grpc.pb.cc
-    Sources/ConfigMgr.cpp
 
 )
 set(Headers 
     Headers/Server.hpp
     Headers/HttpConnection.hpp
     Headers/LogicSystem.hpp
+    Headers/AsioIOServicePool.hpp
+    Headers/VerifyGrpcClient.hpp
+    Headers/ConfigMgr.hpp
     Headers/message.pb.h
     Headers/message.grpc.pb.h
 )

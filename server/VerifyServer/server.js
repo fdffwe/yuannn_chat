@@ -1,11 +1,12 @@
 const grpc = require('@grpc/grpc-js')
 const message_proto = require('./proto')
 const const_module = require('./const')
+const config_module = require('./config')
 const { v4: uuidv4 } = require('uuid');
 const emailModule = require('./email');
-const redis_module = require('./redis')
+// const redis_module = require('./redis')
 
-async function GetVarifyCode(call, callback) {
+async function GetVerifyCode(call, callback) {
     console.log("email is ", call.request.email)
     try{
         uniqueId = uuidv4();
@@ -13,7 +14,7 @@ async function GetVarifyCode(call, callback) {
         let text_str =  '您的验证码为'+ uniqueId +'请三分钟内完成注册'
         //发送邮件
         let mailOptions = {
-            from: 'secondtonone1@163.com',
+            from: config_module.email_user,
             to: call.request.email,
             subject: '验证码',
             text: text_str,
@@ -33,8 +34,8 @@ async function GetVarifyCode(call, callback) {
 
 function main() {
     var server = new grpc.Server()
-    server.addService(message_proto.VarifyService.service, { GetVarifyCode: GetVarifyCode })
-    server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
+    server.addService(message_proto.VerifyService.service, { GetVerifyCode: GetVerifyCode })
+    server.bindAsync('127.0.0.1:50051', grpc.ServerCredentials.createInsecure(), () => {
         server.start()
         console.log('grpc server started')        
     })

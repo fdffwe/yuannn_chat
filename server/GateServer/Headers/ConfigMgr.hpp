@@ -1,10 +1,11 @@
-#pragma oncey
+#pragma once
 #include <string>
 #include <unordered_map>
 #include <iostream>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/filesystem.hpp>
+
 
 struct SectionInfo {
     SectionInfo() = default;
@@ -29,9 +30,8 @@ struct SectionInfo {
     }
 };
 
-class ConfigMgr {
+class ConfigMgr{
 public:
-    ConfigMgr();
     ~ConfigMgr() { 
         _config_map.clear();
     }
@@ -51,7 +51,13 @@ public:
         _config_map = src._config_map;
     }
 
+    static ConfigMgr& getInstance(){
+        static ConfigMgr configMgr; 
+        return configMgr;  
+    }
+
 private:
+    ConfigMgr();
     std::unordered_map<std::string, SectionInfo> _config_map;
 };
 

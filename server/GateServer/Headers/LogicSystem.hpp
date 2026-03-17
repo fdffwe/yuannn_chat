@@ -2,7 +2,6 @@
 #include "Singleton.hpp"
 #include "const.hpp"
 
-
 #include<map>
 #include<functional>
 

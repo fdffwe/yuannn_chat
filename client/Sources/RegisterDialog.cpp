@@ -57,7 +57,7 @@ void RegisterDialog::slot_reg_mod_finished(ReqId id ,QString res, ErrorCodes err
 void RegisterDialog::initHttpHandlers(){
 
 	// 注册： 获取验证码回包的逻辑
-	_handlersMap.insert(ReqId::ID_GET_VARIFY_CODE,[this](const QJsonObject& jsonObj){
+	_handlersMap.insert(ReqId::ID_GET_VERIFY_CODE,[this](const QJsonObject& jsonObj){
 		int err = jsonObj["error"].toInt();
 		if(err){
 			showTip(tr("参数错误"),false);
@@ -85,7 +85,7 @@ void RegisterDialog::on_get_code_button_clicked(){
 		// 发送一个 http 的 get_verifycode 请求 --> 获取验证码
 		QJsonObject jsonObj;
 		jsonObj["email"] = email; 
-		HttpMgr::getInstance()->postHttpReq(QUrl(GATE_URL_PREFIX+"/get_verifycode"),jsonObj, ReqId::ID_GET_VARIFY_CODE,Moudles::Register);
+		HttpMgr::getInstance()->postHttpReq(QUrl(GATE_URL_PREFIX+"/get_verifycode"),jsonObj, ReqId::ID_GET_VERIFY_CODE,Moudles::Register);
 
 
 		// 错误处理在这里，就是接收 response 的时候处理 （这就是不同模块）

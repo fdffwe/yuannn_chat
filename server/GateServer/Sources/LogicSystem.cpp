@@ -1,6 +1,6 @@
 #include"LogicSystem.hpp"
 #include"HttpConnection.hpp"
-#include"VarifyGrpcClient.hpp"
+#include"VerifyGrpcClient.hpp"
 
 
 
@@ -43,7 +43,7 @@ LogicSystem::LogicSystem(){
         std::cout << "email is " << email << std::endl;
 
         // 调用 gRPC 客户端获取验证码
-        GetVarifyRsp rsp = VerifyGrpcClient::getInstance()->GetVarifyCode(email);
+        GetVerifyRsp rsp = VerifyGrpcClient::getInstance()->GetVerifyCode(email);
 
         root["error"] = rsp.error();
         root["email"] = rsp.email();
