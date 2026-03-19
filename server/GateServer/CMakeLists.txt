@@ -20,6 +20,8 @@ find_package(gRPC REQUIRED)
 find_package(Threads REQUIRED)
 
 set(JSON_DIR /usr/include/jsoncpp)
+set(HIREDIS_DIR /usr/include/hiredis)
+
 
 set(Sources 
     Sources/main.cpp
@@ -31,6 +33,7 @@ set(Sources
     Sources/ConfigMgr.cpp
     Sources/message.pb.cc
     Sources/message.grpc.pb.cc
+    Sources/RedisMgr.cpp
 
 )
 set(Headers 
@@ -42,6 +45,7 @@ set(Headers
     Headers/ConfigMgr.hpp
     Headers/message.pb.h
     Headers/message.grpc.pb.h
+    Headers/RedisMgr.hpp
 )
 
 
@@ -54,13 +58,18 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/Headers
     ${CMAKE_SOURCE_DIR}/Sources
     ${JSON_DIR}
+    ${REDIS_DIR}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+    # asio 库
     Boost::system
     Boost::filesystem
     jsoncpp 
+    # gprc 服务
     gRPC::grpc++
     protobuf::libprotobuf
     Threads::Threads
+    # redis 服务
+    hiredis
 )
