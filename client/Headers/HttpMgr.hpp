@@ -14,7 +14,7 @@ public:
 
     // url：服务器地址   json:信息   后面两个是为了：透传（知道上次请求的信息，因为是异步的）
     // ???异步,  回调 （这里的回调， 哪里来的） ???
-    void postHttpReq(QUrl url, QJsonObject json, ReqId reqId, Moudles mod); 
+    void postHttpReq(QUrl url, QJsonObject json, ReqId reqId, Modules mod); 
 
 
 private: 
@@ -23,7 +23,7 @@ private:
 
 // Qt 的异步机制
 private slots: 
-    void slot_http_finished(ReqId id ,QString res, ErrorCodes err, Moudles mod);
+    void slot_http_finished(ReqId id ,QString res, ErrorCodes err, Modules mod);
 
 // 说是谁 发送 信号， 谁定义 信号
 // 说是谁 接收 信号， 谁定义 槽
@@ -35,7 +35,7 @@ signals:
      * @param res 是服务器的返回的结构： 比如请求登录，服务器返回：成功/失败（Json字符串）
      * @note 回调时候，好知道自己是要干嘛
      */
-    void sig_http_finished(ReqId id ,QString res, ErrorCodes err, Moudles mod); 
+    void sig_http_finished(ReqId id ,QString res, ErrorCodes err, Modules mod); 
     
     void sig_reg_mod_finished(ReqId id ,QString res, ErrorCodes err); 
 };

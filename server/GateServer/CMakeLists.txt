@@ -21,6 +21,7 @@ find_package(Threads REQUIRED)
 
 set(JSON_DIR /usr/include/jsoncpp)
 set(HIREDIS_DIR /usr/include/hiredis)
+set(CPPCONN_DIR /usr/include/cppconn)
 
 
 set(Sources 
@@ -34,6 +35,8 @@ set(Sources
     Sources/message.pb.cc
     Sources/message.grpc.pb.cc
     Sources/RedisMgr.cpp
+    Sources/MysqlDAO.cpp
+    Sources/MysqlMgr.cpp
 
 )
 set(Headers 
@@ -46,6 +49,8 @@ set(Headers
     Headers/message.pb.h
     Headers/message.grpc.pb.h
     Headers/RedisMgr.hpp
+    Headers/MysqlDAO.hpp
+    Headers/MysqlMgr.hpp
 )
 
 
@@ -59,6 +64,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/Sources
     ${JSON_DIR}
     ${REDIS_DIR}
+    ${CPPCONN_DIR}
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -72,4 +78,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Threads::Threads
     # redis 服务
     hiredis
+    # mysql 服务
+    mysqlcppconn
 )

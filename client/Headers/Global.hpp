@@ -27,8 +27,8 @@ enum ReqId{
  * @brief 模块区分：消息定义
  * @note 通过这个，可以把数据传输到： 对应的模块上去处理
  */
-enum Moudles{
-    Register = 0,
+enum Modules{
+    REGISTERMOD = 0,
 
 };
 

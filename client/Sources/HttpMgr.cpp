@@ -13,7 +13,7 @@ HttpMgr::HttpMgr(){
 
 
 
-void HttpMgr::postHttpReq(QUrl url, QJsonObject json, ReqId reqId, Moudles mod){
+void HttpMgr::postHttpReq(QUrl url, QJsonObject json, ReqId reqId, Modules mod){
 
     // Json 对象序列化： 字节数组
     QByteArray data = QJsonDocument(json).toJson();
@@ -50,9 +50,9 @@ void HttpMgr::postHttpReq(QUrl url, QJsonObject json, ReqId reqId, Moudles mod){
     });
 }
 
-void HttpMgr::slot_http_finished(ReqId id ,QString res, ErrorCodes err, Moudles mod){
+void HttpMgr::slot_http_finished(ReqId id ,QString res, ErrorCodes err, Modules mod){
     
-    if(mod == Moudles::Register){            
+    if(mod == Modules::REGISTERMOD){            
         // 发送信号通知指定模块Http响应结束
         emit sig_reg_mod_finished(id,res,err);
     }

@@ -22,16 +22,18 @@ public:
 
             // 返回的 void* 
             auto reply = (redisReply*) redisCommand(context, "auth %s", passwd.c_str());
-            if(reply->type == REDIS_REPLY_ERROR){
-                std::cout << "认证失败" << std::endl;
-                //执行成功 释放redisCommand执行后返回的redisReply所占用的内存
-                freeReplyObject(reply);
-                continue;
-            }
+            // if(reply->type == REDIS_REPLY_ERROR){
+            //     std::cout<< "passwd: " << passwd << std::endl; 
+
+            //     std::cout << "redis 认证失败" << std::endl;
+            //     //执行成功 释放redisCommand执行后返回的redisReply所占用的内存
+            //     freeReplyObject(reply);
+            //     continue;
+            // }
 
             //执行成功 释放redisCommand执行后返回的redisReply所占用的内存
             freeReplyObject(reply);
-            std::cout << "认证成功" << std::endl;
+            std::cout << "redis 认证成功" << std::endl;
             connections_.push(context);
 
         }

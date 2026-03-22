@@ -21,7 +21,9 @@ public:
 
 private:
 
-    // ???
+    // 初始化： http请求的回调函数 
+    // 在点击按钮的地方，发送 http 请求
+    // 异步收到回复时， 统一在这里处理
     void initHttpHandlers();
 
     std::unique_ptr<Ui::RegisterDialog> _ui;
@@ -35,6 +37,8 @@ public slots:
      * @note 命名格式：on_<对象名>_<信号名>(<参数>)
      */
     void on_get_code_button_clicked();
+    void on_sure_btn_clicked();
+
 
     void slot_reg_mod_finished(ReqId id ,QString res, ErrorCodes err);
 
