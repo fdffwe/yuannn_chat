@@ -35,6 +35,8 @@ set(Sources
     Sources/Global.cpp
     Sources/main.cpp
     Sources/HttpMgr.cpp
+    Sources/TimerBtn.cpp
+    Sources/ClickedLabel.cpp
 )
 set(Headers 
     Headers/Login.hpp
@@ -43,6 +45,9 @@ set(Headers
     Headers/Global.hpp
     Headers/Singleton.hpp
     Headers/HttpMgr.hpp
+    Headers/TimerBtn.hpp
+    Headers/ClickedLabel.hpp
+
 )
 set(Resources 
     Resource/res.qrc

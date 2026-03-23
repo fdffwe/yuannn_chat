@@ -19,10 +19,10 @@ public:
 
     
 public slots:
-    void switchButtonClicked();
-
-
-
+    void SlotSwitchReg();
+    void SlotSwitchLogin();
+    // void SlotSwitchReset();
+    // void SlotSwitchLogin2();
 
 private:
     // 尝试智能指针： 自动析构， 不用自己管

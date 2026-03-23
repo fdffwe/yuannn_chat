@@ -35,6 +35,8 @@ enum ErrorCodes{
 	PasswdInvalid = 1009,   //密码更新失败
 	TokenInvalid = 1010,   //Token失效
 	UidInvalid = 1011,  //uid无效
+
+	MysqlError = 1100, // 数据库操作错误
 };
 
 class ConfigMgr;

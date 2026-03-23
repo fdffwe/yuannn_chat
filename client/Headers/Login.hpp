@@ -21,7 +21,7 @@ public slots:
 
 signals:
     void switchRegister();
-
+    void switchReset();
 
 
 

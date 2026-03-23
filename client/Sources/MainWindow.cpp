@@ -19,20 +19,45 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), _ui(std::make_uniq
 
 
 	// switchRegister
-	connect(login_dialog, &Login::switchRegister, this, &MainWindow::switchButtonClicked);
+	connect(login_dialog, &Login::switchRegister, this, &MainWindow::SlotSwitchReg);
+
+	//连接登录界面忘记密码信号
+    // connect(login_dialog, &Login::switchRegister, this, &MainWindow::SlotSwitchReset);
 }
 
 
 MainWindow::~MainWindow() = default;
 
 
-void MainWindow::switchButtonClicked(){
+// 点击注册按钮的槽函数
+void MainWindow::SlotSwitchReg(){
 	register_dialog = new RegisterDialog(this);
 	register_dialog -> setWindowFlags(Qt::Widget);
+	
+	//连接注册界面返回登录信号
+    connect(register_dialog, &RegisterDialog::sigSwitchLogin, this, &MainWindow::SlotSwitchLogin);
+	
 	this->setCentralWidget(register_dialog);
 	login_dialog->hide();
 	register_dialog->show(); 
 	// 确实是出现了，是不过大小是不符合的（导致看不见，这么多bug）
 	// 这个博主也是屌爆了（这就是之前遇见的唯有放： 容器，导致不会随窗口的大小变化而变化）
+}
+
+
+//从注册界面返回登录界面
+void MainWindow::SlotSwitchLogin()
+{
+    //创建一个CentralWidget, 并将其设置为MainWindow的中心部件
+    login_dialog = new Login(this);
+    login_dialog->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+    setCentralWidget(login_dialog);
+    register_dialog->hide();
+    login_dialog->show();
+    //连接登录界面注册信号
+    connect(login_dialog, &Login::switchRegister, this, &MainWindow::SlotSwitchReg);
+
+    //连接登录界面忘记密码信号
+    // connect(login_dialog, &Login::switchReset, this, &MainWindow::SlotSwitchReset);
 }
 

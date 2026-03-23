@@ -38,6 +38,23 @@ enum ErrorCodes{
     ERR_JSON =1, // json 解析失败
     ERR_NETWORK = 2,  // 网络错误
 
+
+	UserExist = 1005,       //用户已经存在
+};
+
+enum TipErr{
+    TIP_SUCCESS = 0,
+    TIP_EMAIL_ERR = 1,
+    TIP_PWD_ERR = 2,
+    TIP_CONFIRM_ERR = 3,
+    TIP_PWD_CONFIRM = 4,
+    TIP_VARIFY_ERR = 5,
+    TIP_USER_ERR = 6
+};
+
+enum ClickLbState{
+    Normal = 0,
+    Selected = 1
 };
 
 extern QString GATE_URL_PREFIX;

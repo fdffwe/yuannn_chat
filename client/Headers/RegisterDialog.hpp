@@ -4,6 +4,7 @@
 #include<QDialog>
 #include <memory>
 
+// #include "ClickedLabel.hpp"
 
 namespace Ui{ class RegisterDialog; };
 
@@ -19,15 +20,7 @@ public:
     // 提示语
     void showTip(QString str,bool isOk);
 
-private:
 
-    // 初始化： http请求的回调函数 
-    // 在点击按钮的地方，发送 http 请求
-    // 异步收到回复时， 统一在这里处理
-    void initHttpHandlers();
-
-    std::unique_ptr<Ui::RegisterDialog> _ui;
-    QMap<ReqId,std::function<void(const QJsonObject&)>> _handlersMap;
 
 public slots:
 
@@ -42,6 +35,35 @@ public slots:
 
     void slot_reg_mod_finished(ReqId id ,QString res, ErrorCodes err);
 
+    void on_return_btn_clicked();
+    void on_cancel_btn_clicked();
 
+
+private:
+
+    // 初始化： http请求的回调函数 
+    // 在点击按钮的地方，发送 http 请求
+    // 异步收到回复时， 统一在这里处理
+    void initHttpHandlers();
+
+    std::unique_ptr<Ui::RegisterDialog> ui;
+    QMap<ReqId,std::function<void(const QJsonObject&)>> _handlersMap;
+    QMap<TipErr, QString> _tip_errs;
+    QTimer * _countdown_timer;
+    int _countdown;
+
+    bool checkUserValid();
+    bool checkEmailValid();
+    bool checkPassValid();
+    bool checkVarifyValid();
+    bool checkConfirmValid();
+
+    void AddTipErr(TipErr te,QString tips);
+    void DelTipErr(TipErr te);
+    
+    void ChangeTipPage();
+
+signals:
+    void sigSwitchLogin();
 
 };

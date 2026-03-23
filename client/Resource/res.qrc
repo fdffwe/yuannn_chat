@@ -1,11 +1,14 @@
-<!DOCTYPE RCC>
 <RCC>
-  <qresource prefix="/">
-    <file>res/二次元.png</file>
-    <file>res/二次元b.png</file>
-    <file>res/app_icon.png</file>
-    <file>res/chat_icon_press.png</file>
-    <file>res/qq.png</file>
-    <file>style/styleSheets.qss</file>
-  </qresource>
+    <qresource prefix="/">
+        <file>res/二次元.png</file>
+        <file>res/二次元b.png</file>
+        <file>res/app_icon.png</file>
+        <file>res/chat_icon_press.png</file>
+        <file>res/qq.png</file>
+        <file>style/styleSheets.qss</file>
+        <file>res/visible_hover.png</file>
+        <file>res/visible.png</file>
+        <file>res/unvisible_hover.png</file>
+        <file>res/unvisible.png</file>
+    </qresource>
 </RCC>

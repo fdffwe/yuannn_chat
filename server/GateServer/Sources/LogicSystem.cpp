@@ -110,7 +110,14 @@ LogicSystem::LogicSystem(){
         // 查找数据库判断用户是否存在
         // 这个就是往数据库： 插入数据
         int uid = MysqlMgr::getInstance()->RegUser(name, email, pwd);
-        if (uid == 0 || uid == -1) {
+        if(uid == - 1){
+            std::cout << "mysql error" << std::endl;
+            root["error"] = ErrorCodes::MysqlError;
+            std::string jsonstr = root.toStyledString();
+            beast::ostream(connection->_response.body()) << jsonstr;
+            return true;
+        }
+        if (uid == 0 ) {
             std::cout << " user or email exist" << std::endl;
             root["error"] = ErrorCodes::UserExist;
             std::string jsonstr = root.toStyledString();
