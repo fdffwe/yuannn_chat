@@ -24,7 +24,7 @@ using tcp = boost::asio::ip::tcp;
 
 enum ErrorCodes{
     SUCCESS = 0, 
-    ERROR_JSON = 1001,  // JSON 解析错误
+    Error_Json = 1001,  // JSON 解析错误
     RPC_FAILED = 1002,  // RPC 请求错误
     VarifyExpired = 1003, //验证码过期
 	VarifyCodeErr = 1004, //验证码错误

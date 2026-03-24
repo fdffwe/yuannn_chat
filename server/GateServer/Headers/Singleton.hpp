@@ -8,7 +8,7 @@ class Singleton{
 
 public: 
 
-    static std::shared_ptr<T> getInstance(){
+    static std::shared_ptr<T> GetInstance(){
         static std::shared_ptr<T> instance(new T);
         return instance; 
     }

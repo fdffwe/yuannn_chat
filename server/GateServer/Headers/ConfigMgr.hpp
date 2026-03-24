@@ -51,7 +51,7 @@ public:
         _config_map = src._config_map;
     }
 
-    static ConfigMgr& getInstance(){
+    static ConfigMgr& GetInstance(){
         static ConfigMgr configMgr; 
         return configMgr;  
     }

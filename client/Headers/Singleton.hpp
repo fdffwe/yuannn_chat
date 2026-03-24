@@ -8,7 +8,7 @@ public:
     Singleton(const Singleton& ) = delete;
     Singleton& operator=(const Singleton& ) = delete;
 
-static std::shared_ptr<T> getInstance(){
+static std::shared_ptr<T> GetInstance(){
     static std::shared_ptr<T>instance(new T);
     return instance;  
 }

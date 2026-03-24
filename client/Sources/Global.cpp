@@ -6,5 +6,5 @@ std::function<void(QWidget*)> repolish = [](QWidget* w){
 };
 
 
-QString GATE_URL_PREFIX = "";
+QString gate_url_prefix = "";
 

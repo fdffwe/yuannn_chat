@@ -17,7 +17,15 @@ Login::Login(QWidget *parent): QDialog(parent), _ui(std::make_unique<Ui::Login>(
 	connect(_ui->registerButton, &QPushButton::clicked, this, &Login::switchRegister);
 
 
+	_ui->forget_label->SetState("normal","hover","","selected","selected_hover","");
+    _ui->forget_label->setCursor(Qt::PointingHandCursor);
+    connect(_ui->forget_label, &ClickedLabel::clicked, this, &Login::slot_forget_pwd);
 }
 
 Login::~Login() = default;
 
+void Login::slot_forget_pwd()
+{
+    qDebug()<<"slot forget pwd";
+    emit switchReset();
+}

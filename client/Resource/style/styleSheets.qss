@@ -11,11 +11,11 @@ QDialog#Login, QDialog#RegisterDialog {
     [] 在这里面表示状态
 */
 
-#err_tip[state='normal']{
+#err_tip[state ='normal']{
     color: green;
 }
 
-#err_tip[state='err']{
+#err_tip[state ='err']{
     color: red;
 }
 

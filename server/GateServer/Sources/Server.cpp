@@ -14,7 +14,7 @@ void Server::start(){
     auto self = shared_from_this();
 
     // 服务池的调用
-    auto& ioc = AsioIOServicePool::getInstance()->GetIOService();
+    auto& ioc = AsioIOServicePool::GetInstance()->GetIOService();
     auto newConnection = std::make_shared<HttpConnection>(ioc);
 
 

@@ -3,8 +3,12 @@
 #include<QDialog>
 #include <memory>
 
-namespace Ui{ class Login; };
+#include "ClickedLabel.hpp"
 
+namespace Ui{ class Login; };
+// namespace Ui {
+    // class Login;
+// } // namespace Ui
 
 class Login : public QDialog {
     Q_OBJECT // 使用信号与槽的必要声明， 还不能有 ； 
@@ -16,7 +20,7 @@ public:
 
 
 public slots:
-
+    void slot_forget_pwd();
 
 
 signals:

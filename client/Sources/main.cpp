@@ -37,9 +37,9 @@ int main(int argc, char * argv[]){
     QString gateHost = settings.value("GateServer/host").toString(); 
     QString gatePort = settings.value("GateServer/port").toString(); 
 
-    GATE_URL_PREFIX = "http://" + gateHost + ":" + gatePort + "";
+    gate_url_prefix = "http://" + gateHost + ":" + gatePort + "";
 
-    qDebug() << GATE_URL_PREFIX ; 
+    qDebug() << gate_url_prefix ; 
     // 客户端的启动
     MainWindow w;
     w.show();

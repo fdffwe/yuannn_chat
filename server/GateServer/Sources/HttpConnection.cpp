@@ -51,7 +51,7 @@ void HttpConnection::handleReq(){
         parseGetParam();
         // _request.target() 是 url (原始的，带参数的)
         // _getUrl 是我解析了以后的， 只是Url
-        bool success = LogicSystem::getInstance()->handleGet(_getUrl,shared_from_this());
+        bool success = LogicSystem::GetInstance()->handleGet(_getUrl,shared_from_this());
 
         if(!success){
             _response.result(http::status::not_found);
@@ -70,7 +70,7 @@ void HttpConnection::handleReq(){
         return ;
     }
     else if(_request.method() == http::verb::post){
-        bool success = LogicSystem::getInstance()->handlePost(_request.target(),shared_from_this());
+        bool success = LogicSystem::GetInstance()->handlePost(_request.target(),shared_from_this());
         
         if(!success){
             _response.result(http::status::not_found);

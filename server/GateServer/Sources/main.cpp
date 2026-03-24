@@ -7,7 +7,7 @@ int main(){
     try{
         net::io_context ioc{1}; 
 
-        auto& gCfgMgr = ConfigMgr::getInstance();
+        auto& gCfgMgr = ConfigMgr::GetInstance();
         std::string gate_port_str = gCfgMgr["GateServer"]["port"];
         unsigned short gate_port = atoi(gate_port_str.c_str());
                 

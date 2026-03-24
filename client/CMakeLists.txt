@@ -37,6 +37,7 @@ set(Sources
     Sources/HttpMgr.cpp
     Sources/TimerBtn.cpp
     Sources/ClickedLabel.cpp
+    Sources/resetdialog.cpp
 )
 set(Headers 
     Headers/Login.hpp
@@ -47,7 +48,7 @@ set(Headers
     Headers/HttpMgr.hpp
     Headers/TimerBtn.hpp
     Headers/ClickedLabel.hpp
-
+    Headers/resetdialog.hpp
 )
 set(Resources 
     Resource/res.qrc

@@ -4,6 +4,7 @@
 
 #include"Login.hpp"
 #include"RegisterDialog.hpp"
+#include "resetdialog.hpp"
 
 
 namespace Ui{ class MainWindow; };
@@ -21,14 +22,15 @@ public:
 public slots:
     void SlotSwitchReg();
     void SlotSwitchLogin();
-    // void SlotSwitchReset();
-    // void SlotSwitchLogin2();
+    void SlotSwitchReset();
+    void SlotSwitchLogin2();
 
 private:
     // 尝试智能指针： 自动析构， 不用自己管
     // share_ptr  unqiue_ptr
     // #include <memory>
     std::unique_ptr<Ui::MainWindow> _ui;
-    Login *login_dialog = nullptr;
-    RegisterDialog *register_dialog = nullptr;
+    Login *_login_dlg;
+    RegisterDialog *_reg_dlg = nullptr;
+    ResetDialog* _reset_dlg = nullptr;
 };

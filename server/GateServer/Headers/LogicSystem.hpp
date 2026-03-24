@@ -17,11 +17,11 @@ public:
 
     ~LogicSystem(); 
 
-    void regGet(std::string, HttpHandler);
+    void RegGet(std::string, HttpHandler);
     bool handleGet(std::string, std::shared_ptr<HttpConnection>);
 
     // 构造的时候， 注册对应：URL 操作
-    void regPost(std::string, HttpHandler);
+    void RegPost(std::string, HttpHandler);
     // 执行对应： URL 操作
     bool handlePost(std::string, std::shared_ptr<HttpConnection>);
 
