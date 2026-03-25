@@ -38,6 +38,8 @@ set(Sources
     Sources/TimerBtn.cpp
     Sources/ClickedLabel.cpp
     Sources/resetdialog.cpp
+    Sources/TcpMgr.cpp
+
 )
 set(Headers 
     Headers/Login.hpp
@@ -49,6 +51,7 @@ set(Headers
     Headers/TimerBtn.hpp
     Headers/ClickedLabel.hpp
     Headers/resetdialog.hpp
+    Headers/TcpMgr.hpp
 )
 set(Resources 
     Resource/res.qrc

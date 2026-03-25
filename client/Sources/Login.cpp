@@ -4,7 +4,7 @@
 #include "HttpMgr.hpp"
 #include <QPainterPath>
 #include <QPainter>
-
+#include"TcpMgr.hpp"
 
 
 
@@ -45,7 +45,11 @@ Login::Login(QWidget *parent): QDialog(parent), ui(std::make_unique<Ui::LoginDia
 		&Login::slot_login_mod_finish);
 
 
-	
+    //连接tcp连接请求 的信号和槽函数
+    connect(this, &Login::sig_connect_tcp, TcpMgr::GetInstance().get(), &TcpMgr::slot_tcp_connect);
+    
+    //连接tcp管理者 发出的连接成功信号
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_con_success, this, &Login::slot_tcp_con_finish);
 
 }
 
@@ -123,11 +127,21 @@ void Login::initHttpHandlers()
         int error = jsonObj["error"].toInt();
         if(error != ErrorCodes::Success){
             showTip(tr("参数错误"),false);
+            enableBtn(true);
             return;
         }
         auto user = jsonObj["user"].toString();
-        showTip(tr("登录成功"), true);
-        qDebug()<< "user is " << user ;
+        //发送信号通知tcpMgr发送长链接
+        ServerInfo si;
+        si.Uid = jsonObj["uid"].toInt();
+        si.Host = jsonObj["host"].toString();
+        si.Port = jsonObj["port"].toString();
+        si.Token = jsonObj["token"].toString();
+        _uid = si.Uid;
+        _token = si.Token;
+        qDebug()<< "user is " << user << " uid is " << si.Uid <<" host is "
+            << si.Host << " Port is " << si.Port << " Token is " << si.Token;
+        emit sig_connect_tcp(si);
     });
 }
 
@@ -180,4 +194,29 @@ void Login::DelTipErr(TipErr te){
     }
 
     showTip(_tip_errs.first(), false);
+}
+
+
+void Login::slot_tcp_con_finish(bool bsuccess)
+{
+   if(bsuccess){
+      showTip(tr("聊天服务连接成功，正在登录..."),true);
+      QJsonObject jsonObj;
+      jsonObj["uid"] = _uid;
+      jsonObj["token"] = _token;
+      QJsonDocument doc(jsonObj);
+      QString jsonString = doc.toJson(QJsonDocument::Indented);
+      //发送tcp请求给chat server
+      TcpMgr::GetInstance()->sig_send_data(ReqId::ID_CHAT_LOGIN, jsonString);
+   }else{
+      showTip(tr("网络异常"),false);
+      enableBtn(true);
+   }
+}
+
+bool Login::enableBtn(bool enabled)
+{
+    ui->login_btn->setEnabled(enabled);
+    ui->registerButton->setEnabled(enabled);
+    return true;
 }
