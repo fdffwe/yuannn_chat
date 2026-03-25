@@ -22,7 +22,6 @@ int main(){
 
         std::make_shared<Server>(ioc,gate_port)->start(); 
         ioc.run();
-
     }
     catch(std::exception& e){
         std::cout <<"exception is " << e.what() << std::endl;

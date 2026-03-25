@@ -25,36 +25,28 @@ set(CPPCONN_DIR /usr/include/cppconn)
 
 
 set(Sources 
-    Sources/main.cpp
-    Sources/Server.cpp
-    Sources/HttpConnection.cpp
-    Sources/LogicSystem.cpp
-    Sources/AsioIOServicePool.cpp
-    Sources/VerifyGrpcClient.cpp
     Sources/ConfigMgr.cpp
     Sources/message.pb.cc
     Sources/message.grpc.pb.cc
     Sources/RedisMgr.cpp
     Sources/MysqlDAO.cpp
     Sources/MysqlMgr.cpp
-    Sources/StatusGrpcClient.cpp
+    Sources/StatusServiceImpl.cpp
+    Sources/StatusServer.cpp
+
 
 )
 set(Headers 
-    Headers/Server.hpp
-    Headers/HttpConnection.hpp
-    Headers/LogicSystem.hpp
-    Headers/AsioIOServicePool.hpp
-    Headers/VerifyGrpcClient.hpp
     Headers/ConfigMgr.hpp
     Headers/message.pb.h
     Headers/message.grpc.pb.h
     Headers/RedisMgr.hpp
     Headers/MysqlDAO.hpp
     Headers/MysqlMgr.hpp
-    Headers/StatusGrpcClient.hpp
+    Headers/StatusServiceImpl.hpp
 
 )
+
 
 
 add_executable(${PROJECT_NAME}

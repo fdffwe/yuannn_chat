@@ -138,7 +138,7 @@ void RegisterDialog::initHttpHandlers(){
             return;
 		}
 
-        if(error != ErrorCodes::SUCCESS){
+        if(error != ErrorCodes::Success){
             showTip(tr("参数错误"),false);
             return;
         }

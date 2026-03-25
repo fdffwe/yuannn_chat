@@ -133,7 +133,7 @@ void ResetDialog::initHandlers(){
     //注册获取验证码回包逻辑
     _handlers.insert(ReqId::ID_GET_VARIFY_CODE, [this](QJsonObject jsonObj){
         int error = jsonObj["error"].toInt();
-        if(error != ErrorCodes::SUCCESS){
+        if(error != ErrorCodes::Success){
             showTip(tr("参数错误"),false);
             return;
         }
@@ -145,7 +145,7 @@ void ResetDialog::initHandlers(){
     //注册注册用户回包逻辑
     _handlers.insert(ReqId::ID_RESET_PWD, [this](QJsonObject jsonObj){
         int error = jsonObj["error"].toInt();
-        if(error != ErrorCodes::SUCCESS){
+        if(error != ErrorCodes::Success){
             showTip(tr("参数错误"),false);
             return;
         }
@@ -158,7 +158,7 @@ void ResetDialog::initHandlers(){
 
 
 void ResetDialog::slot_reset_mod_finish(ReqId id, QString res, ErrorCodes err){
-    if(err != ErrorCodes::SUCCESS){
+    if(err != ErrorCodes::Success){
         showTip(tr("网络请求错误"),false);
         return;
     }

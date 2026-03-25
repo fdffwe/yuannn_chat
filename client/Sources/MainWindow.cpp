@@ -4,8 +4,8 @@
 
 
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), _ui(std::make_unique<Ui::MainWindow>()){
-	_ui->setupUi(this);
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(std::make_unique<Ui::MainWindow>()){
+	ui->setupUi(this);
 
 	// 把需要用到的作为自己的成员（指针） + 有一个函数可以把 QDialog 放到中心窗口中（待对比： 有什么区别）
 	// 以前是： 每一个窗口都是独立的，都是通过按钮跳转其他的窗口（这样子，以前的窗口是没死的，而且每次点击，都会再次创建一个新的窗口）

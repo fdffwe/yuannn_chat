@@ -22,6 +22,7 @@ enum ReqId{
     ID_GET_VARIFY_CODE = 1001, //获取验证码
     ID_REG_USER = 1002, //注册用户
     ID_RESET_PWD = 1003, //重置密码
+    ID_LOGIN_USER = 1004, //用户登录
 };
 
 /**
@@ -31,11 +32,12 @@ enum ReqId{
 enum Modules{
     REGISTERMOD = 0,
     RESETMOD = 1,
+    LOGINMOD = 2,
 };
 
 enum ErrorCodes{
     // 内置实现同理 if(error) error 不能是 0 
-    SUCCESS = 0,
+    Success = 0,
     ERR_JSON =1, // json 解析失败
     ERR_NETWORK = 2,  // 网络错误
 

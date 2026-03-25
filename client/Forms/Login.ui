@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Login</class>
+ <class>LoginDialog</class>
  <widget class="QDialog" name="LoginDialog">
   <property name="geometry">
    <rect>
@@ -31,12 +31,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="spacing">
-      <number>10</number>
-     </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
      <property name="leftMargin">
       <number>10</number>
      </property>
@@ -50,37 +47,39 @@
       <number>10</number>
      </property>
      <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
+      <widget class="QLabel" name="err_tip">
+       <property name="text">
+        <string/>
        </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>10</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../Resource/res.qrc">:/res/app_icon.png</pixmap>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QWidget" name="head_widget" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>220</width>
+         <height>230</height>
+        </size>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="head_label">
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap resource="../Resource/res.qrc">:/res/app_icon.png</pixmap>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer_3">
@@ -100,12 +99,12 @@
        <item>
         <widget class="QLabel" name="userLabel">
          <property name="text">
-          <string>用户：</string>
+          <string>用户名：</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="userEidt">
+        <widget class="QLineEdit" name="user_edit">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -120,18 +119,43 @@
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QLabel" name="passwdLabel">
+         <property name="minimumSize">
+          <size>
+           <width>48</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>密码：</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="passwdEidt">
+        <widget class="QLineEdit" name="pass_edit">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
            <height>25</height>
           </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="ClickedLabel" name="pass_visible">
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>
@@ -168,7 +192,7 @@
       </layout>
      </item>
      <item>
-      <spacer name="verticalSpacer_2">
+      <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -196,7 +220,13 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="loginButton">
+        <widget class="QPushButton" name="login_btn">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>登录</string>
          </property>
@@ -212,7 +242,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
+           <width>20</width>
            <height>20</height>
           </size>
          </property>
@@ -237,6 +267,12 @@
        </item>
        <item>
         <widget class="QPushButton" name="registerButton">
+         <property name="minimumSize">
+          <size>
+           <width>100</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>注册</string>
          </property>
@@ -261,14 +297,17 @@
       </layout>
      </item>
      <item>
-      <spacer name="verticalSpacer_4">
+      <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>5</height>
         </size>
        </property>
       </spacer>

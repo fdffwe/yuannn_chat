@@ -44,7 +44,7 @@ void HttpMgr::PostHttpReq(QUrl url, QJsonObject json, ReqId reqId, Modules mod){
 
         // 返回的信息
         QString res = reply->readAll();
-        emit self->sig_http_finished(reqId, res, ErrorCodes::SUCCESS, mod);
+        emit self->sig_http_finished(reqId, res, ErrorCodes::Success, mod);
         reply->deleteLater(); // reply 可能用于底层事件循环，告诉系统不用再删
         return;
     });
@@ -58,6 +58,8 @@ void HttpMgr::slot_http_finished(ReqId id ,QString res, ErrorCodes err, Modules 
     } else if(mod == Modules::RESETMOD){
         // 重置密码模块的响应
         emit sig_reset_mod_finish(id, res, err);
+    } else if(mod == Modules::LOGINMOD){
+        emit sig_login_mod_finish(id, res, err);
     }
 }
 

@@ -1,19 +1,30 @@
-#pragma once 
-// beast 网络库
-#include<boost/asio.hpp>
-#include<boost/beast.hpp>
-#include<boost/beast/http.hpp>
-// C++自带库
-#include<memory>
-#include<iostream>
-#include<atomic> 
-#include<condition_variable> 
-#include<mutex> 
-#include<queue>
-// jsoncpp
-#include<json/json.h>
+#pragma once
+#include <boost/beast/http.hpp>
+#include <boost/beast.hpp>
+#include <boost/asio.hpp>
+#include <memory>
+#include <iostream>
+#include <unordered_map>
+#include <json/json.h>
+#include <json/value.h>
+#include <json/reader.h>
+#include "Singleton.hpp"
+#include <assert.h>
+#include <queue>
 
+#include <mysql_driver.h>
+#include <mysql_connection.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
+#include <cppconn/statement.h>
+#include <cppconn/exception.h>
 
+#include <iostream>
+#include <functional>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <string>
 
 
 namespace beast = boost::beast; 

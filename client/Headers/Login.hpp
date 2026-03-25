@@ -5,10 +5,8 @@
 
 #include "ClickedLabel.hpp"
 
-namespace Ui{ class Login; };
-// namespace Ui {
-    // class Login;
-// } // namespace Ui
+namespace Ui{ class LoginDialog; };
+
 
 class Login : public QDialog {
     Q_OBJECT // 使用信号与槽的必要声明， 还不能有 ； 
@@ -21,6 +19,8 @@ public:
 
 public slots:
     void slot_forget_pwd();
+    void on_login_btn_clicked();
+    void slot_login_mod_finish(ReqId id, QString res, ErrorCodes err);
 
 
 signals:
@@ -33,5 +33,17 @@ private:
     // 尝试智能指针： 自动析构， 不用自己管
     // share_ptr  unqiue_ptr
     // #include <memory>
-    std::unique_ptr<Ui::Login> _ui;
+    void initHttpHandlers();
+    void showTip(QString str,bool b_ok);
+    bool checkUserValid();
+    bool checkPwdValid();
+
+    std::unique_ptr<Ui::LoginDialog> ui;
+    QMap<ReqId, std::function<void(const QJsonObject&)>> _handlers;
+    bool enableBtn(bool);
+    QMap<TipErr, QString> _tip_errs;
+    void AddTipErr(TipErr te,QString tips);
+    void DelTipErr(TipErr te);
+    int _uid;
+    QString _token;
 };
