@@ -200,7 +200,7 @@ void HttpConnection::parseGetParam(){
     std::string key;
     std::string value;
     size_t pos = 0;
-    while ((pos = query_string.find('&')) != std::string::npos) {
+    while ((pos = query_string.find('&')) != std::string::npos) {   
         auto pair = query_string.substr(0, pos);
         size_t eq_pos = pair.find('=');
         if (eq_pos != std::string::npos) {

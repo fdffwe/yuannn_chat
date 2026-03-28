@@ -4,14 +4,13 @@
 
 
 CServer::CServer(boost::asio::io_context& io_context, short port):_io_context(io_context), _port(port),
-_acceptor(io_context, tcp::endpoint(tcp::v4(),port))
-{
+_acceptor(io_context, tcp::endpoint(tcp::v4(),port)){
     cout << "Server start success, listen on port : " << _port << endl;
     StartAccept();
 }
+
 CServer::~CServer() {
 	cout << "Server destruct listen on port : " << _port << endl;
-	
 }
 
 void CServer::StartAccept() {
@@ -46,5 +45,4 @@ void CServer::ClearSession(std::string session_id) {
 	}
 
 	_sessions.erase(session_id);
-	
 }

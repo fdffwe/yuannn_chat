@@ -19,7 +19,7 @@
 
 
 void RunServer() {
-    auto & cfg = ConfigMgr::GetInstance();
+    auto & cfg = ConfigMgr::GetInstance(); 
     std::string server_address(cfg["StatusServer"]["Host"]+":"+ cfg["StatusServer"]["Port"]);
     StatusServiceImpl service;
     grpc::ServerBuilder builder;
@@ -29,6 +29,9 @@ void RunServer() {
     // 构建并启动gRPC服务器
     std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
     std::cout << "Server listening on " << server_address << std::endl;
+
+    // 上面实现了 grpc 服务的监听， 只需等待 Client 调用
+
     // 创建Boost.Asio的io_context
     boost::asio::io_context io_context;
     // 创建signal_set用于捕获SIGINT

@@ -42,7 +42,6 @@ Login::Login(QWidget *parent): QDialog(parent), ui(std::make_unique<Ui::LoginDia
     //连接登录回包信号
     connect(HttpMgr::GetInstance().get(), &HttpMgr::sig_login_mod_finish, this,&Login::slot_login_mod_finish);
 
-
     //连接tcp连接请求 的信号和槽函数
     connect(this, &Login::sig_connect_tcp, TcpMgr::GetInstance().get(), &TcpMgr::slot_tcp_connect);
     
@@ -51,7 +50,6 @@ Login::Login(QWidget *parent): QDialog(parent), ui(std::make_unique<Ui::LoginDia
 
     //连接tcp管理者发出的登陆失败信号
     connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_login_failed, this, &Login::slot_login_failed);
-
 }
 
 Login::~Login() = default;
@@ -120,9 +118,8 @@ bool Login::checkPwdValid(){
 }
 
 
-void Login::initHttpHandlers()
-{
-    //注册获取登录回包逻辑
+void Login::initHttpHandlers(){
+    // 获取登录 http 回包逻辑
     _handlers.insert(ReqId::ID_LOGIN_USER, [this](QJsonObject jsonObj){
         int error = jsonObj["error"].toInt();
         if(error != ErrorCodes::Success){
@@ -141,6 +138,8 @@ void Login::initHttpHandlers()
         _token = si.Token;
         qDebug()<< "user is " << user << " uid is " << si.Uid <<" host is "
             << si.Host << " Port is " << si.Port << " Token is " << si.Token;
+
+        // 下一步的任务，http完成了， 该连接 tcp 进行聊天了 ???
         emit sig_connect_tcp(si);
     });
 }
@@ -197,8 +196,7 @@ void Login::DelTipErr(TipErr te){
 }
 
 
-void Login::slot_tcp_con_finish(bool bsuccess)
-{
+void Login::slot_tcp_con_finish(bool bsuccess){
    if(bsuccess){
       showTip(tr("聊天服务连接成功，正在登录..."),true);
       QJsonObject jsonObj;

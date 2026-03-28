@@ -86,9 +86,9 @@ void LogicSystem::LoginHandler(std::shared_ptr<CSession> session, const short &m
 	Defer defer([this, &rtvalue, session]() {
 		std::string return_str = rtvalue.toStyledString();
 		session->Send(return_str, MSG_CHAT_LOGIN_RSP);
-		});
+	});
 
-	//从redis获取用户token是否正确
+	// 从redis获取用户token是否正确
 	std::string uid_str = std::to_string(uid);
 	std::string token_key = USERTOKENPREFIX + uid_str;
 	std::string token_value = "";
@@ -124,8 +124,7 @@ void LogicSystem::LoginHandler(std::shared_ptr<CSession> session, const short &m
 }
 
 
-bool LogicSystem::GetBaseInfo(std::string base_key, int uid, std::shared_ptr<UserInfo>& userinfo)
-{
+bool LogicSystem::GetBaseInfo(std::string base_key, int uid, std::shared_ptr<UserInfo>& userinfo){
 	//优先查redis中查询用户信息
 	std::string info_str = "";
 	bool b_base = RedisMgr::GetInstance()->Get(base_key, info_str);

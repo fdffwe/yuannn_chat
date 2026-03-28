@@ -5,7 +5,7 @@
 
 
 CSession::CSession(boost::asio::io_context& io_context, CServer* server):
-	_socket(io_context), _server(server), _b_close(false),_b_head_parse(false), _user_uid(0){
+_socket(io_context), _server(server), _b_close(false),_b_head_parse(false), _user_uid(0){
 	boost::uuids::uuid  a_uuid = boost::uuids::random_generator()();
 	_session_id = boost::uuids::to_string(a_uuid);
 	_recv_head_node = make_shared<MsgNode>(HEAD_TOTAL_LEN);
@@ -151,7 +151,7 @@ void CSession::AsyncReadBody(int total_len)
         catch (std::exception& e) {
             std::cout << "Exception code is " << e.what() << endl;
         }
-        });
+    });
 }
 
 
@@ -226,8 +226,7 @@ void CSession::HandleWrite(const boost::system::error_code& error, std::shared_p
 }
 
 
-void CSession::DealExceptionSession()
-{
+void CSession::DealExceptionSession(){
 	auto self = shared_from_this();
 	//加锁清除session
 	auto uid_str = std::to_string(_user_uid);
@@ -236,7 +235,7 @@ void CSession::DealExceptionSession()
 	Defer defer([identifier, lock_key, self, this]() {
 		_server->ClearSession(_session_id);
 		RedisMgr::GetInstance()->releaseLock(lock_key, identifier);
-		});
+    });
 
 	if (identifier.empty()) {
 		return;

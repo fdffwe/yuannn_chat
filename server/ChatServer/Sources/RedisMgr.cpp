@@ -335,8 +335,7 @@ bool RedisMgr::ExistsKey(const std::string &key)
 
 
 // lock 
-std::string RedisMgr::acquireLock(const std::string& lockName,
-	int lockTimeout, int acquireTimeout) {
+std::string RedisMgr::acquireLock(const std::string& lockName,int lockTimeout, int acquireTimeout) {
 
 	auto connect = _con_pool->getConnection();
 	if (connect == nullptr) {
@@ -350,8 +349,7 @@ std::string RedisMgr::acquireLock(const std::string& lockName,
 	return DistLock::Inst().acquireLock(connect, lockName, lockTimeout, acquireTimeout);
 }
 
-bool RedisMgr::releaseLock(const std::string& lockName,
-	const std::string& identifier) {
+bool RedisMgr::releaseLock(const std::string& lockName,const std::string& identifier) {
 	if (identifier.empty()) {
 		return true;
 	}

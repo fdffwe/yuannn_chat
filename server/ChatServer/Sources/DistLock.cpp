@@ -23,16 +23,17 @@ static std::string generateUUID() {
 }
 
 // 尝试获取锁，返回锁的唯一标识符（UUID），如果获取失败则返回空字符串
-std::string DistLock::acquireLock(redisContext* context, const std::string& lockName,
-    int lockTimeout, int acquireTimeout) {
+std::string DistLock::acquireLock(redisContext* context, const std::string& lockName,int lockTimeout, int acquireTimeout) {
+    // 这里是通过 NX 语句的唯一性， 来实现： 分布式锁
+    // EX 设置过期时间，防止程序崩溃，死锁
+    // 然后为了保证他们的原子性， 必须一起使用
     std::string identifier = generateUUID();
     std::string lockKey = "lock:" + lockName;
     auto endTime = std::chrono::steady_clock::now() + std::chrono::seconds(acquireTimeout);
 
     while (std::chrono::steady_clock::now() < endTime) {
         // 使用 SET 命令尝试加锁：SET lockKey identifier NX EX lockTimeout
-        redisReply* reply = (redisReply*)redisCommand(context, "SET %s %s NX EX %d",
-            lockKey.c_str(), identifier.c_str(), lockTimeout);
+        redisReply* reply = (redisReply*)redisCommand(context, "SET %s %s NX EX %d",lockKey.c_str(), identifier.c_str(), lockTimeout);
         if (reply != nullptr) {
             // 判断返回结果是否为 OK
             if (reply->type == REDIS_REPLY_STATUS && std::string(reply->str) == "OK") {
@@ -42,14 +43,14 @@ std::string DistLock::acquireLock(redisContext* context, const std::string& lock
             freeReplyObject(reply);
         }
         // 暂停 1 毫秒后重试，防止忙等待
+        // 这叫“退避策略”。如果不睡，CPU 会疯狂地一秒钟敲 Redis 门几万次。这会把 CPU 跑满，也会把 Redis 压垮。睡 1 毫秒（或者更久）能让出 CPU 资源。
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     return "";
 }
 
 // 释放锁，只有锁的持有者才能释放，返回是否成功
-bool DistLock::releaseLock(redisContext* context, const std::string& lockName,
-    const std::string& identifier) {
+bool DistLock::releaseLock(redisContext* context, const std::string& lockName,const std::string& identifier) {
     std::string lockKey = "lock:" + lockName;
     // Lua 脚本：判断锁标识是否匹配，匹配则删除锁
     const char* luaScript = "if redis.call('get', KEYS[1]) == ARGV[1] then \
@@ -58,8 +59,7 @@ bool DistLock::releaseLock(redisContext* context, const std::string& lockName,
                                 return 0 \
                              end";
     // 调用 EVAL 命令执行 Lua 脚本，第一个参数为脚本，后面依次为 key 的数量、key 以及对应的参数
-    redisReply* reply = (redisReply*)redisCommand(context, "EVAL %s 1 %s %s",
-        luaScript, lockKey.c_str(), identifier.c_str());
+    redisReply* reply = (redisReply*)redisCommand(context, "EVAL %s 1 %s %s",luaScript, lockKey.c_str(), identifier.c_str());
     bool success = false;
     if (reply != nullptr) {
         // 当返回整数值为 1 时，表示成功删除了锁
