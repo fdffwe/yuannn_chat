@@ -1,4 +1,6 @@
 #include "LogicSystem.hpp"
+#include <memory>
+#include <string>
 #include "HttpConnection.hpp"
 #include "VerifyGrpcClient.hpp"
 #include "RedisMgr.hpp"
@@ -250,6 +252,7 @@ LogicSystem::LogicSystem(){
         root["uid"] = userInfo.uid;
         root["token"] = reply.token();
         root["host"] = reply.host();
+        root["port"] = reply.port();
         std::string jsonstr = root.toStyledString();
         beast::ostream(connection->_response.body()) << jsonstr;
         return true;

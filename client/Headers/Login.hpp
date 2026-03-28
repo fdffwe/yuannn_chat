@@ -22,7 +22,7 @@ public slots:
     void on_login_btn_clicked();
     void slot_login_mod_finish(ReqId id, QString res, ErrorCodes err);
     void slot_tcp_con_finish(bool bsuccess);
-    // void slot_login_failed(int);
+    void slot_login_failed(int);
 
 signals:
     void switchRegister();
@@ -31,9 +31,6 @@ signals:
 
 
 private:
-    // 尝试智能指针： 自动析构， 不用自己管
-    // share_ptr  unqiue_ptr
-    // #include <memory>
     void initHttpHandlers();
     void showTip(QString str,bool b_ok);
     bool checkUserValid();

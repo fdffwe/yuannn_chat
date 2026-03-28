@@ -5,7 +5,9 @@ HttpMgr::~HttpMgr(){
 }
 
 HttpMgr::HttpMgr(){
-
+    // 点击按钮 --> postHttpReq --> sig_http_finished --> slot_http_finished -->  
+    // 依据透传的数据，按照 modules 分类型处理 --> 发送对应的 ReqId 的 sig_XXX_finished --> 回到对应的 CPP 文件，调用对应的槽函数
+    // --> 最后执行对应的 handler， 似乎每个模块都是这么设计的
     connect(this,&HttpMgr::sig_http_finished,this,&HttpMgr::slot_http_finished);
 
 }

@@ -72,4 +72,6 @@ private:
 
 
 #define CODEPREFIX  "code_"
+// token 前缀
+#define USERTOKENPREFIX  "utoken_"
 

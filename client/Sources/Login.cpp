@@ -2,8 +2,6 @@
 #include "ui_Login.h"
 #include <memory>
 #include "HttpMgr.hpp"
-#include <QPainterPath>
-#include <QPainter>
 #include"TcpMgr.hpp"
 
 
@@ -40,9 +38,9 @@ Login::Login(QWidget *parent): QDialog(parent), ui(std::make_unique<Ui::LoginDia
 	});
 
 	initHttpHandlers();
+
     //连接登录回包信号
-    connect(HttpMgr::GetInstance().get(), &HttpMgr::sig_login_mod_finish, this,
-		&Login::slot_login_mod_finish);
+    connect(HttpMgr::GetInstance().get(), &HttpMgr::sig_login_mod_finish, this,&Login::slot_login_mod_finish);
 
 
     //连接tcp连接请求 的信号和槽函数
@@ -50,6 +48,9 @@ Login::Login(QWidget *parent): QDialog(parent), ui(std::make_unique<Ui::LoginDia
     
     //连接tcp管理者 发出的连接成功信号
     connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_con_success, this, &Login::slot_tcp_con_finish);
+
+    //连接tcp管理者发出的登陆失败信号
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_login_failed, this, &Login::slot_login_failed);
 
 }
 
@@ -77,8 +78,7 @@ void Login::on_login_btn_clicked()
     QJsonObject json_obj;
     json_obj["user"] = user;
     json_obj["passwd"] = QString(pwd);
-    HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_login"),
-                                        json_obj, ReqId::ID_LOGIN_USER,Modules::LOGINMOD);
+    HttpMgr::GetInstance()->PostHttpReq(QUrl(gate_url_prefix+"/user_login"),json_obj, ReqId::ID_LOGIN_USER,Modules::LOGINMOD);
 }
 
 
@@ -219,4 +219,12 @@ bool Login::enableBtn(bool enabled)
     ui->login_btn->setEnabled(enabled);
     ui->registerButton->setEnabled(enabled);
     return true;
+}
+
+void Login::slot_login_failed(int err)
+{
+    QString result = QString("登录失败, err is %1")
+                             .arg(err);
+    showTip(result,false);
+    enableBtn(true);
 }

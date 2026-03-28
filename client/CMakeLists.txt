@@ -39,7 +39,7 @@ set(Sources
     Sources/ClickedLabel.cpp
     Sources/resetdialog.cpp
     Sources/TcpMgr.cpp
-
+    Sources/UserMgr.cpp
 )
 set(Headers 
     Headers/Login.hpp
@@ -52,6 +52,8 @@ set(Headers
     Headers/ClickedLabel.hpp
     Headers/resetdialog.hpp
     Headers/TcpMgr.hpp
+    Headers/UserMgr.hpp
+    
 )
 set(Resources 
     Resource/res.qrc
