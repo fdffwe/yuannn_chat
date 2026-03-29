@@ -1,11 +1,13 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 #include <memory>
+#include "TcpMgr.hpp"
 
 
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(std::make_unique<Ui::MainWindow>()){
 	ui->setupUi(this);
+
 
 	// 把需要用到的作为自己的成员（指针） + 有一个函数可以把 QDialog 放到中心窗口中（待对比： 有什么区别）
 	// 以前是： 每一个窗口都是独立的，都是通过按钮跳转其他的窗口（这样子，以前的窗口是没死的，而且每次点击，都会再次创建一个新的窗口）
@@ -23,6 +25,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(std::make_uniqu
 
 	// 连接登录界面忘记密码信号
     connect(_login_dlg, &Login::switchReset, this, &MainWindow::SlotSwitchReset);
+
+    //连接创建聊天界面信号
+    connect(TcpMgr::GetInstance().get(),&TcpMgr::sig_swich_chatdlg, this, &MainWindow::SlotSwitchChat);
+
+    // 测试： chatdialog
+    emit TcpMgr::GetInstance()->sig_swich_chatdlg();
 }
 
 
@@ -88,4 +96,16 @@ void MainWindow::SlotSwitchLogin2()
     connect(_login_dlg, &Login::switchReset, this, &MainWindow::SlotSwitchReset);
     //连接登录界面注册信号
     connect(_login_dlg, &Login::switchRegister, this, &MainWindow::SlotSwitchReg);
+}
+
+
+void MainWindow::SlotSwitchChat()
+{
+    _chat_dlg = new ChatDialog();
+    _chat_dlg->setWindowFlags(Qt::CustomizeWindowHint|Qt::FramelessWindowHint);
+    setCentralWidget(_chat_dlg);
+    _chat_dlg->show();
+    _login_dlg->hide();
+    this->setMinimumSize(QSize(1050,900));
+    this->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
 }

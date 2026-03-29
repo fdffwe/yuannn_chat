@@ -20,3 +20,11 @@ void UserMgr::SetToken(QString token)
 UserMgr::UserMgr()
 {
 }
+
+bool UserMgr::IsLoadChatFin() {
+    if (_chat_loaded >= _friend_list.size()) {
+        return true;
+    }
+
+    return false;
+}

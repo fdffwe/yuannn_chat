@@ -10,6 +10,8 @@
 #include "MainWindow.hpp"
 #include "Global.hpp"   
 
+#include "chatdialog.hpp"
+
 // 一些按钮的图片资源是： .icon 类型的文件
 
 

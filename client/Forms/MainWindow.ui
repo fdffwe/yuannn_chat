@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>500</height>
+    <width>322</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -29,13 +29,7 @@
    <iconset resource="../Resource/res.qrc">
     <normaloff>:/res/app_icon.png</normaloff>:/res/app_icon.png</iconset>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
-     <layout class="QGridLayout" name="gridLayout"/>
-    </item>
-   </layout>
-  </widget>
+  <widget class="QWidget" name="centralwidget"/>
  </widget>
  <resources>
   <include location="../Resource/res.qrc"/>

@@ -5,7 +5,7 @@
 #include"Login.hpp"
 #include"RegisterDialog.hpp"
 #include "resetdialog.hpp"
-
+#include "chatdialog.hpp"
 
 namespace Ui{ class MainWindow; };
 
@@ -24,6 +24,8 @@ public slots:
     void SlotSwitchLogin();
     void SlotSwitchReset();
     void SlotSwitchLogin2();
+    // chat 界面
+    void SlotSwitchChat();
 
 private:
     // 尝试智能指针： 自动析构， 不用自己管
@@ -33,4 +35,5 @@ private:
     Login *_login_dlg;
     RegisterDialog *_reg_dlg = nullptr;
     ResetDialog* _reset_dlg = nullptr;
+    ChatDialog* _chat_dlg = nullptr; 
 };

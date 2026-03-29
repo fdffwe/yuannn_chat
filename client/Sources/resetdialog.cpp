@@ -7,11 +7,11 @@
 #include <QDebug>
 #include <QRegularExpression>
 
+
 ResetDialog::~ResetDialog(){
     delete ui;
 }
-ResetDialog::ResetDialog(QWidget *parent) :
-QDialog(parent),ui(new Ui::ResetDialog){
+ResetDialog::ResetDialog(QWidget *parent) :QDialog(parent),ui(new Ui::ResetDialog){
     ui->setupUi(this);
     connect(ui->user_edit,&QLineEdit::editingFinished,this,[this](){
         checkUserValid();
