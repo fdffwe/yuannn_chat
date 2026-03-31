@@ -78,10 +78,13 @@ LogicSystem::LogicSystem(){
             beast::ostream(connection->_response.body()) << jsonstr;
             return true;
         }
+
         auto email = src_root["email"].asString();
-        auto name = src_root["user"].asString();
-        auto pwd = src_root["passwd"].asString();
-        auto confirm = src_root["confirm"].asString();
+		auto name = src_root["user"].asString();
+		auto pwd = src_root["passwd"].asString();
+		auto confirm = src_root["confirm"].asString();
+		auto icon = src_root["icon"].asString();
+
         if (pwd != confirm) {
             std::cout << "password err " << std::endl;
             root["error"] = ErrorCodes::PasswdErr;
@@ -113,7 +116,7 @@ LogicSystem::LogicSystem(){
 
         // 查找数据库判断用户是否存在
         // 这个就是往数据库： 插入数据
-        int uid = MysqlMgr::GetInstance()->RegUser(name, email, pwd);
+        int uid = MysqlMgr::GetInstance()->RegUser(name, email, pwd, icon);
         if(uid == - 1){
             std::cout << "mysql error" << std::endl;
             root["error"] = ErrorCodes::MysqlError;
@@ -130,12 +133,13 @@ LogicSystem::LogicSystem(){
         }
 
         root["error"] = 0;
-        root["uid"] = uid;
-        root["email"] = email;
-        root ["user"]= name;
-        root["passwd"] = pwd;
-        root["confirm"] = confirm;
-        root["verifycode"] = src_root["verifycode"].asString();
+		root["uid"] = uid;
+		root["email"] = email;
+		root ["user"]= name;
+		root["passwd"] = pwd;
+		root["confirm"] = confirm;
+		root["icon"] = icon;
+		root["verifycode"] = src_root["verifycode"].asString();
         std::string jsonstr = root.toStyledString();
         beast::ostream(connection->_response.body()) << jsonstr;
         return true;

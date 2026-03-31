@@ -55,6 +55,7 @@ AddFriendRsp ChatGrpcClient::NotifyAddFriend(std::string server_ip, const AddFri
 		rsp.set_error(ErrorCodes::RPCFailed);
 		return rsp;
 	}
+	
 
 	return rsp;
 }

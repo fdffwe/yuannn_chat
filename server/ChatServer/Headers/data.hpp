@@ -27,4 +27,3 @@ struct ApplyInfo {
 	int _sex;
 	int _status;
 };
-

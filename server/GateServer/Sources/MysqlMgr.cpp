@@ -4,10 +4,10 @@ MysqlMgr::~MysqlMgr() {
 
 }
 
-int MysqlMgr::RegUser(const std::string& name, const std::string& email, const std::string& pwd){
-    return _dao.RegUser(name, email, pwd);
+int MysqlMgr::RegUser(const std::string& name, const std::string& email, const std::string& pwd, const std::string& icon)
+{
+	return _dao.RegUserTransaction(name, email, pwd, icon);
 }
-
 
 MysqlMgr::MysqlMgr() {
 
