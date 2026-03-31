@@ -1,6 +1,6 @@
-#include "chatuserlist.hpp"
-#include <QScrollBar>
-#include "UserMgr.hpp"
+#include "chatuserlist.h"
+#include<QScrollBar>
+#include "usermgr.h"
 #include <QTimer>
 #include <QCoreApplication>
 

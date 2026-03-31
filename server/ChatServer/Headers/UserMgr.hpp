@@ -4,8 +4,10 @@
 #include <mutex>
 
 #include "Singleton.hpp"
-
 class CSession;
+
+// 因为我们用户登录后，要将连接(session)和用户uid绑定。为以后登陆踢人做准备。所以新增UserMgr管理类；
+
 class UserMgr: public Singleton<UserMgr>
 {
 	friend class Singleton<UserMgr>;

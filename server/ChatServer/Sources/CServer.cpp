@@ -33,14 +33,14 @@ void CServer::HandleAccept(shared_ptr<CSession> new_session, const boost::system
 }
 
 
-//根据session 的id删除session，并移除用户和session的关联
+// 根据session 的id删除 session，并移除用户和session的关联
 void CServer::ClearSession(std::string session_id) {
 	
 	lock_guard<mutex> lock(_mutex);
 	if (_sessions.find(session_id) != _sessions.end()) {
 		auto uid = _sessions[session_id]->GetSessionId();
 
-		//移除用户和session的关联
+		// 移除 用户 和 session 的关联
 		UserMgr::GetInstance()->RmvUserSession(stoi(uid), session_id);
 	}
 

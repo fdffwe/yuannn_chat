@@ -36,7 +36,12 @@ set(Sources
     Sources/MysqlDAO.cpp
     Sources/MysqlMgr.cpp
     Sources/DistLock.cpp
+    Sources/ChatGrpcClient.cpp
+    Sources/ChatServiceImpl.cpp
+    Sources/message.pb.cc
+    Sources/message.grpc.pb.cc
 
+    
 )
 
 set(Headers 
@@ -54,6 +59,10 @@ set(Headers
     Headers/MysqlDAO.hpp
     Headers/MysqlMgr.hpp
     Headers/DistLock.hpp
+    Headers/ChatGrpcClient.hpp
+    Headers/ChatServiceImpl.hpp
+    Headers/message.pb.h
+    Headers/message.grpc.pb.h
 
 )
 

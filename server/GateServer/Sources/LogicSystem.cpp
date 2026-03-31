@@ -26,7 +26,7 @@ LogicSystem::LogicSystem(){
     });
 
     // 注册 POST - 获取验证码
-    RegPost("/get_verifycode",[](std::shared_ptr<HttpConnection> connection){
+    RegPost("/get_varifycode",[](std::shared_ptr<HttpConnection> connection){
         auto strBody = beast::buffers_to_string(connection->_request.body().data());
         std::cout << "receive data is " << strBody << std::endl;
 
@@ -102,7 +102,8 @@ LogicSystem::LogicSystem(){
             return true;
         }
 
-        if (varify_code != src_root["verifycode"].asString()) {
+        std::cout << varify_code << std::endl;
+        if (varify_code != src_root["varifycode"].asString()) {
             std::cout << " varify code error" << std::endl;
             root["error"] = ErrorCodes::VarifyCodeErr;
             std::string jsonstr = root.toStyledString();
@@ -225,12 +226,13 @@ LogicSystem::LogicSystem(){
             beast::ostream(connection->_response.body()) << jsonstr;
             return true;
         }
-        auto name = src_root["user"].asString();
+        auto email = src_root["email"].asString();
         auto pwd = src_root["passwd"].asString();
         UserInfo userInfo;
+        std::cout << "input: " << email << " " << pwd << std::endl;
         //查询数据库判断用户名和密码是否匹配
-        bool pwd_valid = MysqlMgr::GetInstance()->CheckPwd(name, pwd, userInfo);
-        if (!pwd_valid) {
+        bool eml_valid = MysqlMgr::GetInstance()->CheckPwd(email, pwd, userInfo);
+        if (!eml_valid) {
             std::cout << " user pwd not match" << std::endl;
             root["error"] = ErrorCodes::PasswdInvalid;
             std::string jsonstr = root.toStyledString();
@@ -248,7 +250,7 @@ LogicSystem::LogicSystem(){
         }
         std::cout << "succeed to load userinfo uid is " << userInfo.uid << std::endl;
         root["error"] = 0;
-        root["user"] = name;
+        root["email"] = email;
         root["uid"] = userInfo.uid;
         root["token"] = reply.token();
         root["host"] = reply.host();

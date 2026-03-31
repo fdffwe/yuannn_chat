@@ -1,52 +1,43 @@
+#include "mainwindow.h"
 #include <QApplication>
-#include <QDebug>
-#include<QDir>
-#include <QIcon>
 #include <QFile>
-#include<QSettings>
+#include "global.h"
+#include<QDir>
+
+int main(int argc, char *argv[]){
+    QApplication a(argc, argv);
+    QFile qss(":/style/stylesheet.qss");
 
 
-#include "Login.hpp"
-#include "MainWindow.hpp"
-#include "Global.hpp"   
+    if( qss.open(QFile::ReadOnly))
+    {
+        qDebug("QSS open success");
+        QString style = QLatin1String(qss.readAll());
+        a.setStyleSheet(style);
+        qss.close();
+    }else{
+         qDebug("QSS Open failed");
+    }
 
-#include "chatdialog.hpp"
 
-// 一些按钮的图片资源是： .icon 类型的文件
+    // 获取当前应用程序的路径
+    QString app_path = QCoreApplication::applicationDirPath();
+    // 拼接文件名
+    QString fileName = "config.ini";
+    QDir tmp = app_path;
+    tmp.cdUp();
+    tmp.cdUp();
+    app_path = tmp.absolutePath();
+    QString config_path = QDir::toNativeSeparators(app_path +
+                             QDir::separator() + fileName);
 
+    qDebug() << config_path;
+    QSettings settings(config_path, QSettings::IniFormat);
+    QString gate_host = settings.value("GateServer/host").toString();
+    QString gate_port = settings.value("GateServer/port").toString();
+    gate_url_prefix = "http://"+gate_host+":"+gate_port;
 
-
-int main(int argc, char * argv[]){
-    Q_INIT_RESOURCE(res);
-    QApplication app(argc,argv);
-
-    QFile qss(":/style/styleSheets.qss");
-    qss.open(QFile::ReadOnly);
-    QString style = qss.readAll();
-    app.setStyleSheet(style);
-
-    
-    // config.ini 参数设置
-    // toNativeSeparators 转化为本地分隔符
-    // QDir 处理路径， QSettings
-    QString tmpPath = "/home/eai/demo/weChat/client/config.ini";
-    QString configPath = QDir::toNativeSeparators(tmpPath); 
-
-    // 文件管理对象
-    QSettings settings(configPath, QSettings::IniFormat); 
-     
-    // 获取文件中的参数
-    QString gateHost = settings.value("GateServer/host").toString(); 
-    QString gatePort = settings.value("GateServer/port").toString(); 
-
-    gate_url_prefix = "http://" + gateHost + ":" + gatePort + "";
-
-    qDebug() << gate_url_prefix ; 
-    // 客户端的启动
     MainWindow w;
     w.show();
-    return app.exec();
+    return a.exec();
 }
-
-
-

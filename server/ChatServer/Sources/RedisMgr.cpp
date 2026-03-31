@@ -365,3 +365,29 @@ bool RedisMgr::releaseLock(const std::string& lockName,const std::string& identi
 
 	return DistLock::Inst().releaseLock(connect, lockName, identifier);
 }
+
+bool RedisMgr::HDel(const std::string& key, const std::string& field)
+{
+	auto connect = _con_pool->getConnection();
+	if (connect == nullptr) {
+		return false;
+	}
+
+	Defer defer([&connect, this]() {
+		_con_pool->returnConnection(connect);
+	});
+
+	redisReply* reply = (redisReply*)redisCommand(connect, "HDEL %s %s", key.c_str(), field.c_str());
+	if (reply == nullptr) {
+		std::cerr << "HDEL command failed" << std::endl;
+		return false;
+	}
+
+	bool success = false;
+	if (reply->type == REDIS_REPLY_INTEGER) {
+		success = reply->integer > 0;
+	}
+
+	freeReplyObject(reply);
+	return success;
+}

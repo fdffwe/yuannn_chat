@@ -5,6 +5,7 @@ ConfigMgr::ConfigMgr(){
     try {
         boost::filesystem::path current_path = boost::filesystem::current_path();
         boost::filesystem::path config_path = current_path / "config.ini";
+        std::cout << "current path: " << current_path.string() << std::endl;
         if (!boost::filesystem::exists(config_path)) {
             // try parent
             config_path = current_path.parent_path() / "config.ini";
@@ -47,4 +48,12 @@ ConfigMgr::ConfigMgr(){
     catch (std::exception& e) {
         std::cout << "ConfigMgr read failed: " << e.what() << std::endl;
     }
+}
+
+std::string ConfigMgr::GetValue(const std::string& section, const std::string& key) {
+	if (_config_map.find(section) == _config_map.end()) {
+		return "";
+	}
+
+	return _config_map[section].GetValue(key);
 }

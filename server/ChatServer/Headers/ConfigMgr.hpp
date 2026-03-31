@@ -28,6 +28,13 @@ struct SectionInfo {
         if (!_section_datas.count(key)) return std::string("");
         return _section_datas[key];
     }
+    std::string GetValue(const std::string & key) {
+		if (_section_datas.find(key) == _section_datas.end()) {
+			return "";
+		}
+		// 这里可以添加一些边界检查  
+		return _section_datas[key];
+	}
 };
 
 class ConfigMgr{
@@ -55,6 +62,12 @@ public:
         static ConfigMgr configMgr; 
         return configMgr;  
     }
+
+    // 兼容旧代码中的 Inst() 调用
+    static ConfigMgr& Inst(){ return GetInstance(); }
+
+    // 获取配置值，若不存在返回空字符串
+    std::string GetValue(const std::string& section, const std::string& key);
 
 private:
     ConfigMgr();

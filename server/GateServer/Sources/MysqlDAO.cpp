@@ -130,6 +130,7 @@ bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd, UserInf
     });
     try {
         if (con == nullptr) {
+            std::cout<< "Mysql init failed" << std::endl;
             return false;
         }
         // 准备SQL语句
@@ -139,15 +140,16 @@ bool MysqlDao::CheckPwd(const std::string& name, const std::string& pwd, UserInf
         std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
         std::string origin_pwd = "";
         // 遍历结果集
-        while (res->next()) {
+        if(res->next()) {
             origin_pwd = res->getString("pwd");
             // 输出查询到的密码
-            std::cout << "Password: " << origin_pwd << std::endl;
-            break;
+            std::cout << "Password: " << name << std::endl;
         }
         if (pwd != origin_pwd) {
+            std::cout<< "check " << origin_pwd << std::endl;
             return false;
         }
+
         userInfo.name = name;
         userInfo.email = res->getString("email");
         userInfo.uid = res->getInt("uid");

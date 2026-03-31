@@ -37,7 +37,7 @@ public:
 	std::shared_ptr<CSession> SharedSelf();
 	void AsyncReadBody(int length);
 	void AsyncReadHead(int total_len);
-
+	void NotifyOffline(int uid);
 	//处理异常连接
 	void DealExceptionSession();
 	

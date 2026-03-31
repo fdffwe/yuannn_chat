@@ -259,5 +259,19 @@ void CSession::DealExceptionSession(){
 
 LogicNode::LogicNode(shared_ptr<CSession>  session, 
 	shared_ptr<RecvNode> recvnode):_session(session),_recvnode(recvnode) {
-	
+        
+}
+
+
+void CSession::NotifyOffline(int uid) {
+
+	Json::Value  rtvalue;
+	rtvalue["error"] = ErrorCodes::Success;
+	rtvalue["uid"] = uid;
+
+
+	std::string return_str = rtvalue.toStyledString();
+
+	Send(return_str, ID_NOTIFY_OFF_LINE_REQ);
+	return;
 }

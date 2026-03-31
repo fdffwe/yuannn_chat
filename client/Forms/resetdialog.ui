@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>284</width>
-    <height>550</height>
+    <width>354</width>
+    <height>538</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -186,9 +186,6 @@
         <property name="text">
          <string>获取</string>
         </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
        </widget>
       </item>
      </layout>
@@ -268,9 +265,6 @@
         <property name="text">
          <string>确认</string>
         </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
        </widget>
       </item>
       <item>
@@ -289,9 +283,6 @@
         </property>
         <property name="text">
          <string>返回</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -317,7 +308,7 @@
   <customwidget>
    <class>TimerBtn</class>
    <extends>QPushButton</extends>
-   <header>TimerBtn.hpp</header>
+   <header location="global">timerbtn.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

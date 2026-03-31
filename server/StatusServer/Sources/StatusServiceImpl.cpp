@@ -3,16 +3,34 @@
 #include "const.hpp"
 #include"RedisMgr.hpp"
 
-StatusServiceImpl::StatusServiceImpl():_server_index(0){
-    auto& cfg = ConfigMgr::GetInstance();
-    ChatServer server;
-    server.port = cfg["ChatServer1"]["Port"];
-    server.host = cfg["ChatServer1"]["Host"];
-    _servers.push_back(server);
-    server.port = cfg["ChatServer2"]["Port"];
-    server.host = cfg["ChatServer2"]["Host"];
-    _servers.push_back(server);
+
+StatusServiceImpl::StatusServiceImpl(){
+	auto& cfg = ConfigMgr::GetInstance();
+	auto server_list = cfg["chatservers"]["Name"];
+
+	std::vector<std::string> words;
+
+	std::stringstream ss(server_list);
+	std::string word;
+
+	while (std::getline(ss, word, ',')) {
+		words.push_back(word);
+	}
+
+	for (auto& word : words) {
+		if (cfg[word]["Name"].empty()) {
+			continue;
+		}
+
+		ChatServer server;
+		server.port = cfg[word]["Port"];
+		server.host = cfg[word]["Host"];
+		server.name = cfg[word]["Name"];
+		_servers[server.name] = server;
+	}
+
 }
+
 
 std::string generate_unique_string() {
     // 创建UUID对象
@@ -21,18 +39,67 @@ std::string generate_unique_string() {
     std::string unique_string = to_string(uuid);
     return unique_string;
 }
+// 这个是通过轮询的方式实现的负载均衡
+// Status StatusServiceImpl::GetChatServer(ServerContext* context, const GetChatServerReq* request, GetChatServerRsp* reply){
+//     std::string prefix("yuannn status server has received :  ");
+//     // 这个做到服务器负载均衡，这么简单吗？ 就是轮询的方式
+//     _server_index = (_server_index++) % (_servers.size());
+//     auto &server = _servers[_server_index];
+//     reply->set_host(server.host);
+//     reply->set_port(server.port);
+//     reply->set_error(ErrorCodes::Success);
+//     reply->set_token(generate_unique_string());
+//     insertToken(request->uid(), reply->token());
+//     return Status::OK;
+// }
 
+
+//  最小连接数动态分配 (Least Connections)
 Status StatusServiceImpl::GetChatServer(ServerContext* context, const GetChatServerReq* request, GetChatServerRsp* reply){
-    std::string prefix("llfc status server has received :  ");
-    // 这个做到服务器负载均衡，这么简单吗？ 就是轮询的方式
-    _server_index = (_server_index++) % (_servers.size());
-    auto &server = _servers[_server_index];
+    std::string prefix("yuannn status server has received :  ");
+    const auto& server = getChatServer();
     reply->set_host(server.host);
     reply->set_port(server.port);
     reply->set_error(ErrorCodes::Success);
     reply->set_token(generate_unique_string());
     insertToken(request->uid(), reply->token());
     return Status::OK;
+}
+
+ChatServer StatusServiceImpl::getChatServer() {
+    std::lock_guard<std::mutex> guard(_server_mtx);
+    auto minServer = _servers.begin()->second;
+    auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, minServer.name);
+    if (count_str.empty()) {
+        //不存在则默认设置为最大
+        minServer.con_count = INT_MAX;
+    }
+    else {
+        minServer.con_count = std::stoi(count_str);
+    }
+
+
+    // 使用范围基于for循环
+    for (auto& server : _servers) {
+
+        if (server.second.name == minServer.name) {
+            continue;
+        }
+
+        auto count_str = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server.second.name);
+        if (count_str.empty()) {
+            server.second.con_count = INT_MAX;
+        }
+        else {
+            server.second.con_count = std::stoi(count_str);
+        }
+
+        if (server.second.con_count < minServer.con_count) {
+            minServer = server.second;
+        }
+    }
+
+    return minServer;
 }
 
 //  这里是 ??? 哪几个服务间的通信呢 ？ 

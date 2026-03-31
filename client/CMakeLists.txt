@@ -28,57 +28,135 @@ find_package(Boost REQUIRED COMPONENTS
     filesystem
 )
 
-set(Sources 
-    Sources/Login.cpp
-    Sources/MainWindow.cpp
-    Sources/RegisterDialog.cpp
-    Sources/Global.cpp
-    Sources/main.cpp
-    Sources/HttpMgr.cpp
-    Sources/TimerBtn.cpp
-    Sources/ClickedLabel.cpp
-    Sources/clickedbtn.cpp
-    Sources/resetdialog.cpp
-    Sources/TcpMgr.cpp
-    Sources/UserMgr.cpp
+set(Sources
+    Sources/adduseritem.cpp
+    Sources/applyfriend.cpp
+    Sources/applyfrienditem.cpp
+    Sources/applyfriendlist.cpp
+    Sources/applyfriendpage.cpp
+    Sources/authenfriend.cpp
+    Sources/BubbleFrame.cpp
     Sources/chatdialog.cpp
-    Sources/customizeedit.cpp
+    Sources/ChatItemBase.cpp
+    Sources/chatpage.cpp
     Sources/chatuserlist.cpp
     Sources/chatuserwid.cpp
+    Sources/ChatView.cpp
+    Sources/clickedbtn.cpp
+    Sources/clickedlabel.cpp
+    Sources/clickedoncelabel.cpp
+    Sources/contactuserlist.cpp
+    Sources/conuseritem.cpp
+    Sources/customizeedit.cpp
+    Sources/customizetextedit.cpp
+    Sources/findfaildlg.cpp
+    Sources/findsuccessdlg.cpp
+    Sources/friendinfopage.cpp
+    Sources/friendlabel.cpp
+    Sources/global.cpp
+    Sources/grouptipitem.cpp
+    Sources/httpmgr.cpp
+    Sources/imagecropperlabel.cpp
+    Sources/invaliditem.cpp
+    Sources/lineitem.cpp
     Sources/listitembase.cpp
+    Sources/loadingdlg.cpp
+    Sources/logindialog.cpp
+    Sources/main.cpp
+    Sources/mainwindow.cpp
+    Sources/MessageTextEdit.cpp
+    Sources/PictureBubble.cpp
+    Sources/registerdialog.cpp
+    Sources/resetdialog.cpp
+    Sources/searchlist.cpp
+    Sources/statelabel.cpp
+    Sources/statewidget.cpp
+    Sources/tcpmgr.cpp
+    Sources/TextBubble.cpp
+    Sources/timerbtn.cpp
+    Sources/userdata.cpp
+    Sources/userinfopage.cpp
+    Sources/usermgr.cpp
 )
 
 set(Headers 
-    Headers/Login.hpp
-    Headers/MainWindow.hpp
-    Headers/RegisterDialog.hpp
-    Headers/Global.hpp
-    Headers/Singleton.hpp
-    Headers/HttpMgr.hpp
-    Headers/TimerBtn.hpp
-    Headers/ClickedLabel.hpp
-    Headers/clickedbtn.hpp
-    Headers/resetdialog.hpp
-    Headers/TcpMgr.hpp
-    Headers/UserMgr.hpp
-    Headers/chatdialog.hpp
-    Headers/customizeedit.hpp
-    Headers/chatuserlist.hpp
-    Headers/chatuserwid.hpp
-    Headers/listitembase.hpp
+    Headers/adduseritem.h
+    Headers/applyfriend.h
+    Headers/applyfrienditem.h
+    Headers/applyfriendlist.h
+    Headers/applyfriendpage.h
+    Headers/authenfriend.h
+    Headers/BubbleFrame.h
+    Headers/chatdialog.h
+    Headers/ChatItemBase.h
+    Headers/chatpage.h
+    Headers/chatuserlist.h
+    Headers/chatuserwid.h
+    Headers/ChatView.h
+    Headers/clickedbtn.h
+    Headers/clickedlabel.h
+    Headers/clickedoncelabel.h
+    Headers/contactuserlist.h
+    Headers/conuseritem.h
+    Headers/customizeedit.h
+    Headers/customizetextedit.h
+    Headers/findfaildlg.h
+    Headers/findsuccessdlg.h
+    Headers/friendinfopage.h
+    Headers/friendlabel.h
+    Headers/global.h
+    Headers/grouptipitem.h
+    Headers/httpmgr.h
+    Headers/imagecropperdialog.h
+    Headers/imagecropperlabel.h
+    Headers/invaliditem.h
+    Headers/lineitem.h
+    Headers/listitembase.h
+    Headers/loadingdlg.h
+    Headers/logindialog.h
+    Headers/mainwindow.h
+    Headers/MessageTextEdit.h
+    Headers/PictureBubble.h
+    Headers/registerdialog.h
+    Headers/resetdialog.h
+    Headers/searchlist.h
+    Headers/singleton.h
+    Headers/statelabel.h
+    Headers/statewidget.h
+    Headers/tcpmgr.h
+    Headers/TextBubble.h
+    Headers/timerbtn.h
+    Headers/userdata.h
+    Headers/userinfopage.h
+    Headers/usermgr.h
 )
 
 set(Resources 
-    Sources/res.qrc
+    rc.qrc
 )
 
 set(UI_FILES
-    Forms/ChatDialog.ui
-    Forms/Login.ui
-    Forms/MainWindow.ui
-    Forms/RegisterDialog.ui
-    Forms/resetdialog.ui
+    Forms/adduseritem.ui
+    Forms/applyfriend.ui
+    Forms/applyfrienditem.ui
+    Forms/applyfriendpage.ui
+    Forms/authenfriend.ui
+    Forms/chatdialog.ui
+    Forms/chatpage.ui
     Forms/chatuserwid.ui
+    Forms/conuseritem.ui
+    Forms/findfaildlg.ui
+    Forms/findsuccessdlg.ui
+    Forms/friendinfopage.ui
+    Forms/friendlabel.ui
+    Forms/grouptipitem.ui
+    Forms/lineitem.ui
+    Forms/loadingdlg.ui
+    Forms/logindialog.ui
+    Forms/mainwindow.ui
+    Forms/registerdialog.ui
+    Forms/resetdialog.ui
+    Forms/userinfopage.ui
 )
 
 qt5_wrap_ui(UI_SOURCES ${UI_FILES})

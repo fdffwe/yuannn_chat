@@ -2,7 +2,8 @@
 #include "CSession.hpp"
 #include "RedisMgr.hpp"
 #include "MysqlMgr.hpp"
-
+#include "UserMgr.hpp"
+#include "ConfigMgr.hpp"
 
 void LogicSystem::RegisterCallBacks() {
     _fun_callbacks[MSG_CHAT_LOGIN] = std::bind(&LogicSystem::LoginHandler, this,
@@ -121,6 +122,34 @@ void LogicSystem::LoginHandler(std::shared_ptr<CSession> session, const short &m
 	rtvalue["desc"] = user_info->desc;
 	rtvalue["sex"] = user_info->sex;
 	rtvalue["icon"] = user_info->icon;
+
+	//从数据库获取申请列表 （待实现）
+
+    //获取好友列表
+    auto server_name = ConfigMgr::GetInstance().GetValue("SelfServer", "Name");
+    //将登录数量增加
+    auto rd_res = RedisMgr::GetInstance()->HGet(LOGIN_COUNT, server_name);
+    int count = 0;
+    if (!rd_res.empty()) {
+        count = std::stoi(rd_res);
+    }
+    count++;
+
+    auto count_str = std::to_string(count);
+    RedisMgr::GetInstance()->HSet(LOGIN_COUNT, server_name, count_str);
+
+    //session绑定用户uid
+    session->SetUserId(uid);
+
+    //为用户设置登录ip server的名字
+    std::string  ipkey = USERIPPREFIX + uid_str;
+    RedisMgr::GetInstance()->Set(ipkey, server_name);
+
+    //uid和session绑定管理,方便以后踢人操作
+    UserMgr::GetInstance()->SetUserSession(uid, session);
+
+    return;
+
 }
 
 
