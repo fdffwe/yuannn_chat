@@ -424,7 +424,9 @@ void AuthenFriend::SlotApplySure()
     }else{
         back_name = ui->back_ed->text();
     }
+    // include both accepter's remark and original applicant's remark
     jsonObj["back"] = back_name;
+    jsonObj["ori_back"] = ui->back_ed->placeholderText();
 
     QJsonDocument doc(jsonObj);
     QByteArray jsonData = doc.toJson(QJsonDocument::Compact);

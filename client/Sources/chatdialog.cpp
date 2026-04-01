@@ -662,6 +662,10 @@ void ChatDialog::slot_switch_apply_friend_page()
     qDebug()<<"receive switch apply friend page sig";
     _last_widget = ui->friend_apply_page;
     ui->stackedWidget->setCurrentWidget(ui->friend_apply_page);
+
+    // 用户切换到“新的朋友”页面时清除侧边和联系人列表的红点提示
+    ui->side_contact_lb->ShowRedPoint(false);
+    ui->con_user_list->ShowRedPoint(false);
 }
 
 void ChatDialog::slot_friend_info_page(std::shared_ptr<UserInfo> user_info)
@@ -749,6 +753,10 @@ void ChatDialog::slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp)
     ui->chat_user_list->insertItem(0, item);
     ui->chat_user_list->setItemWidget(item, chat_user_wid);
     _chat_items_added.insert(auth_rsp->_uid, item);
+
+    // 收到认证成功响应时，尝试清除好友申请红点（如果没有未处理申请，界面上应取消红点）
+    ui->side_contact_lb->ShowRedPoint(false);
+    ui->con_user_list->ShowRedPoint(false);
 }
 
 void ChatDialog::slot_jump_chat_item(std::shared_ptr<SearchInfo> si)

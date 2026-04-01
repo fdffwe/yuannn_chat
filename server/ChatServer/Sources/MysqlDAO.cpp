@@ -320,7 +320,7 @@ bool MysqlDao::GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo> 
 				continue;
 			}
 
-			user_info->back = user_info->name;
+			user_info->back = back;
 			user_info_list.push_back(user_info);
 		}
 		return true;
@@ -335,7 +335,7 @@ bool MysqlDao::GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo> 
 	return true;
 }
 
-bool MysqlDao::AddFriendApply(const int& from, const int& to)
+bool MysqlDao::AddFriendApply(const int& from, const int& to, const std::string& back_name)
 {
 	auto con = pool_->getConnection();
 	if (con == nullptr) {
@@ -405,7 +405,7 @@ bool MysqlDao::AuthFriendApply(const int& from, const int& to) {
 	return true;
 }
 
-bool MysqlDao::AddFriend(const int& from, const int& to, std::string back_name) {
+bool MysqlDao::AddFriend(const int& from, const int& to, const std::string& applicant_back, const std::string& acceptor_back) {
 	auto con = pool_->getConnection();
 	if (con == nullptr) {
 		return false;
@@ -420,14 +420,13 @@ bool MysqlDao::AddFriend(const int& from, const int& to, std::string back_name) 
 		//开始事务
 		con->setAutoCommit(false);
 
-		// 准备第一个SQL语句, 插入认证方好友数据
+		// 准备第一个SQL语句, 插入申请方好友数据（使用申请者提供的备注）
 		std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement("INSERT IGNORE INTO friend(self_id, friend_id, back) "
 			"VALUES (?, ?, ?) "
 			));
-		//反过来的申请时from，验证时to
 		pstmt->setInt(1, from); // from id
 		pstmt->setInt(2, to);
-		pstmt->setString(3, back_name);
+		pstmt->setString(3, applicant_back);
 		// 执行更新
 		int rowAffected = pstmt->executeUpdate();
 		if (rowAffected < 0) {
@@ -435,14 +434,14 @@ bool MysqlDao::AddFriend(const int& from, const int& to, std::string back_name) 
 			return false;
 		}
 
-		//准备第二个SQL语句，插入申请方好友数据
+		//准备第二个SQL语句，插入同意方好友数据（保存同意方给申请方的备注）
 				std::unique_ptr<sql::PreparedStatement> pstmt2(con->prepareStatement("INSERT IGNORE INTO friend(self_id, friend_id, back) "
 			"VALUES (?, ?, ?) "
 		));
 		//反过来的申请时from，验证时to
 		pstmt2->setInt(1, to); // from id
 		pstmt2->setInt(2, from);
-		pstmt2->setString(3, "");
+		pstmt2->setString(3, acceptor_back);
 		// 执行更新
 		int rowAffected2 = pstmt2->executeUpdate();
 		if (rowAffected2 < 0) {

@@ -420,8 +420,8 @@ void LogicSystem::AddFriendApply(std::shared_ptr<CSession> session, const short&
         session->Send(return_str, ID_ADD_FRIEND_RSP);
         });
 
-    //先更新数据库
-    MysqlMgr::GetInstance()->AddFriendApply(uid, touid);
+		//先更新数据库（保存申请记录）
+		MysqlMgr::GetInstance()->AddFriendApply(uid, touid, bakname);
 
     //查询redis 查找touid对应的server ip
     auto to_str = std::to_string(touid);
@@ -444,7 +444,7 @@ void LogicSystem::AddFriendApply(std::shared_ptr<CSession> session, const short&
             notify["error"] = ErrorCodes::Success;
             notify["applyuid"] = uid;
             notify["name"] = applyname;
-            notify["desc"] = "";
+				notify["desc"] = bakname;
             std::string return_str = notify.toStyledString();
             session->Send(return_str, ID_NOTIFY_ADD_FRIEND_REQ);
         }
@@ -460,7 +460,7 @@ void LogicSystem::AddFriendApply(std::shared_ptr<CSession> session, const short&
     add_req.set_applyuid(uid);
     add_req.set_touid(touid);
     add_req.set_name(applyname);
-    add_req.set_desc("");
+		add_req.set_desc(bakname);
     if (b_info) {
         add_req.set_icon(apply_info->icon);
         add_req.set_sex(apply_info->sex);
@@ -486,9 +486,10 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
     Json::Value root;
     reader.parse(msg_data, root);
 
-    auto uid = root["fromuid"].asInt();
-    auto touid = root["touid"].asInt();
-    auto back_name = root["back"].asString();
+	auto uid = root["fromuid"].asInt();
+	auto touid = root["touid"].asInt();
+	auto back_name = root["back"].asString();
+	auto orig_back = root["ori_back"].asString();
     std::cout << "from " << uid << " auth friend to " << touid << std::endl;
 
     Json::Value  rtvalue;
@@ -514,11 +515,11 @@ void LogicSystem::AuthFriendApply(std::shared_ptr<CSession> session, const short
         session->Send(return_str, ID_AUTH_FRIEND_RSP);
         });
 
-    //先更新数据库
-    MysqlMgr::GetInstance()->AuthFriendApply(uid, touid);
+	//先更新数据库（更新申请状态）
+	MysqlMgr::GetInstance()->AuthFriendApply(uid, touid);
 
-    //更新数据库添加好友
-    MysqlMgr::GetInstance()->AddFriend(uid, touid,back_name);
+	//更新数据库添加好友（使用申请者原始备注与同意者填写的备注）
+	MysqlMgr::GetInstance()->AddFriend(uid, touid, orig_back, back_name);
 
     //查询redis 查找touid对应的server ip
     auto to_str = std::to_string(touid);
