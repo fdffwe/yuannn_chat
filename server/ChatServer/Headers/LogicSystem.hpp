@@ -27,9 +27,16 @@ public:
 	~LogicSystem();
 	void PostMsgToQue(std::shared_ptr <LogicNode> msg);
 	void SetServer(std::shared_ptr<CServer> pserver);
-
+	void SearchInfo(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
+	bool isPureDigit(const std::string& str);
 	bool GetBaseInfo(std::string base_key, int uid, std::shared_ptr<UserInfo> &userinfo);
-private:
+	bool GetUserByUid(std::string uid_str, Json::Value& rtvalue);
+	bool GetUserByName(std::string name, Json::Value& rtvalue);
+	void AddFriendApply(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
+	void AuthFriendApply(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
+	bool GetFriendApplyInfo(int to_uid, std::vector<std::shared_ptr<ApplyInfo>>& list);
+	bool GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo>> & user_list);
+	private:
 	LogicSystem();
 	void DealMsg();
 	void RegisterCallBacks();
