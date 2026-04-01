@@ -46,14 +46,14 @@ void CSession::AsyncReadHead(int total_len)
             if (ec) {
                 std::cout << "handle read failed, error is " << ec.what() << endl;
                 Close();
-                _server->ClearSession(_session_id);
+                DealExceptionSession();
                 return;
             }
             if (bytes_transfered < HEAD_TOTAL_LEN) {
                 std::cout << "read length not match, read [" << bytes_transfered << "] , total ["
                     << HEAD_TOTAL_LEN << "]" << endl;
                 Close();
-                _server->ClearSession(_session_id);
+                DealExceptionSession();
                 return;
             }
             _recv_head_node->Clear();
@@ -67,7 +67,7 @@ void CSession::AsyncReadHead(int total_len)
             //id非法
             if (msg_id > MAX_LENGTH) {
                 std::cout << "invalid msg_id is " << msg_id << endl;
-                _server->ClearSession(_session_id);
+                DealExceptionSession();
                 return;
             }
             short msg_len = 0;
@@ -78,7 +78,7 @@ void CSession::AsyncReadHead(int total_len)
             //id非法
             if (msg_len > MAX_LENGTH) {
                 std::cout << "invalid data length is " << msg_len << endl;
-                _server->ClearSession(_session_id);
+                DealExceptionSession();
                 return;
             }
             _recv_msg_node = make_shared<RecvNode>(msg_len, msg_id);
@@ -129,14 +129,14 @@ void CSession::AsyncReadBody(int total_len)
             if (ec) {
                 std::cout << "handle read failed, error is " << ec.what() << endl;
                 Close();
-                _server->ClearSession(_session_id);
+                DealExceptionSession();
                 return;
             }
             if (bytes_transfered < total_len) {
                 std::cout << "read length not match, read [" << bytes_transfered << "] , total ["
                     << total_len<<"]" << endl;
                 Close();
-                _server->ClearSession(_session_id);
+                DealExceptionSession();
                 return;
             }
             memcpy(_recv_msg_node->_data , _data , bytes_transfered);

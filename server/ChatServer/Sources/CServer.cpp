@@ -37,12 +37,13 @@ void CServer::HandleAccept(shared_ptr<CSession> new_session, const boost::system
 void CServer::ClearSession(std::string session_id) {
 	
 	lock_guard<mutex> lock(_mutex);
-	if (_sessions.find(session_id) != _sessions.end()) {
-		auto uid = _sessions[session_id]->GetSessionId();
+    if (_sessions.find(session_id) != _sessions.end()) {
+        // 使用会话对象记录的用户 id，而不是 session id
+        int uid = _sessions[session_id]->GetUserId();
 
-		// 移除 用户 和 session 的关联
-		UserMgr::GetInstance()->RmvUserSession(stoi(uid), session_id);
-	}
+        // 移除 用户 和 session 的关联
+        UserMgr::GetInstance()->RmvUserSession(uid, session_id);
+    }
 
 	_sessions.erase(session_id);
 }
