@@ -2,7 +2,7 @@
 #include "CServer.hpp"
 #include "LogicSystem.hpp"
 #include"RedisMgr.hpp"
-
+#include"ConfigMgr.hpp"
 
 CSession::CSession(boost::asio::io_context& io_context, CServer* server):
 _socket(io_context), _server(server), _b_close(false),_b_head_parse(false), _user_uid(0){
@@ -13,6 +13,9 @@ _socket(io_context), _server(server), _b_close(false),_b_head_parse(false), _use
 }
 CSession::~CSession() {
 	std::cout << "~CSession destruct" << endl;
+    auto& cfg = ConfigMgr::Inst();
+    auto self_name = cfg["SelfServer"]["Name"]; 
+    RedisMgr::GetInstance()->DecreaseCount(self_name);
 }
 
 tcp::socket& CSession::GetSocket() {

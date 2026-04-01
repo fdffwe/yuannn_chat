@@ -14,6 +14,7 @@ using namespace std;
 bool bstop = false;
 std::condition_variable cond_quit;
 std::mutex mutex_quit;
+
 int main()
 {
     auto& cfg = ConfigMgr::GetInstance();
@@ -21,12 +22,22 @@ int main()
     try {
         auto pool = AsioIOServicePool::GetInstance();
         //将登录数设置为0
-        RedisMgr::GetInstance()->HSet(LOGIN_COUNT, server_name, "0");
-        //定义一个GrpcServer
+        RedisMgr::GetInstance()->InitCount(server_name);
+        Defer derfer ([server_name]() {
+            RedisMgr::GetInstance()->HDel(LOGIN_COUNT, server_name);
+            RedisMgr::GetInstance()->Close();
+        });
 
+        boost::asio::io_context  io_context;
+        auto port_str = cfg["SelfServer"]["Port"];
+        //创建Cserver智能指针
+        auto pointer_server = std::make_shared<CServer>(io_context, atoi(port_str.c_str()));
+        
+        //定义一个GrpcServer
         std::string server_address(cfg["SelfServer"]["Host"] + ":" + cfg["SelfServer"]["RPCPort"]);
         ChatServiceImpl service;
         grpc::ServerBuilder builder;
+        
         // 监听端口和添加服务
         builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
         builder.RegisterService(&service);
@@ -38,23 +49,19 @@ int main()
         //单独启动一个线程处理grpc服务
         std::thread  grpc_server_thread([&server]() {
             server->Wait();
-            });
+        });
 
 
-        boost::asio::io_context  io_context;
         boost::asio::signal_set signals(io_context, SIGINT, SIGTERM);
         signals.async_wait([&io_context, pool, &server](auto, auto) {
             io_context.stop();
             pool->Stop();
             server->Shutdown();
-            });
+        });
 
-        auto port_str = cfg["SelfServer"]["Port"];
-        CServer s(io_context, atoi(port_str.c_str()));
+        LogicSystem::GetInstance()->SetServer(pointer_server);
         io_context.run();
 
-        RedisMgr::GetInstance()->HDel(LOGIN_COUNT, server_name);
-        RedisMgr::GetInstance()->Close();
         grpc_server_thread.join();
     }
     catch (std::exception& e) {
