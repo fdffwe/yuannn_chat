@@ -363,9 +363,9 @@ void ChatDialog::addChatUserList()
     // 创建QListWidgetItem，并设置自定义的widget
     for(int i = 0; i < 13; i++){
         int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
-        int str_i = randomValue%strs.size();
-        int head_i = randomValue%heads.size();
-        int name_i = randomValue%names.size();
+        int str_i = randomValue % strs.size();
+        int head_i = i % heads.size();
+        int name_i = randomValue % names.size();
 
         auto *chat_user_wid = new ChatUserWid();
         auto user_info = std::make_shared<UserInfo>(0,names[name_i],
