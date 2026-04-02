@@ -13,9 +13,6 @@ _socket(io_context), _server(server), _b_close(false),_b_head_parse(false), _use
 }
 CSession::~CSession() {
 	std::cout << "~CSession destruct" << endl;
-    auto& cfg = ConfigMgr::Inst();
-    auto self_name = cfg["SelfServer"]["Name"]; 
-    RedisMgr::GetInstance()->DecreaseCount(self_name);
 }
 
 tcp::socket& CSession::GetSocket() {
@@ -142,10 +139,18 @@ void CSession::AsyncReadBody(int total_len)
                 DealExceptionSession();
                 return;
             }
+            //判断连接无效
+			if (!_server->CheckValid(_session_id)) {
+				Close();
+				return;
+			}
+
             memcpy(_recv_msg_node->_data , _data , bytes_transfered);
             _recv_msg_node->_cur_len += bytes_transfered;
             _recv_msg_node->_data[_recv_msg_node->_total_len] = '\0';
             cout << "receive data is " << _recv_msg_node->_data << endl;
+            //更新session心跳时间
+			UpdateHeartbeat();
             //此处将消息投递到逻辑队列中
             LogicSystem::GetInstance()->PostMsgToQue(make_shared<LogicNode>(shared_from_this(), _recv_msg_node));
             //继续监听头部接受事件
@@ -277,4 +282,19 @@ void CSession::NotifyOffline(int uid) {
 
 	Send(return_str, ID_NOTIFY_OFF_LINE_REQ);
 	return;
+}
+
+bool CSession::IsHeartbeatExpired(std::time_t& now) {
+    double diff_sec = std::difftime(now, _last_heartbeat);
+    if (diff_sec > 60) {
+        std::cout << "heartbeat expired, session id is  " << _session_id << endl;
+        return true;
+    }
+
+    return false;
+}
+
+void CSession::UpdateHeartbeat(){
+    time_t now = std::time(nullptr);
+    _last_heartbeat = now;
 }

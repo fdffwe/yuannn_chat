@@ -8,17 +8,35 @@
 #include "ChatGrpcClient.hpp"
 #include "CServer.hpp"
 
+void LogicSystem::HeartBeatHandler(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data) {
+    Json::Reader reader;
+    Json::Value root;
+    reader.parse(msg_data, root);
+    auto uid = root["fromuid"].asInt();
+    std::cout << "receive heart beat msg, uid is " << uid << std::endl;
+    Json::Value  rtvalue;
+    rtvalue["error"] = ErrorCodes::Success;
+    session->Send(rtvalue.toStyledString(), ID_HEARTBEAT_RSP);
+}
+
 void LogicSystem::RegisterCallBacks() {
     _fun_callbacks[MSG_CHAT_LOGIN] = std::bind(&LogicSystem::LoginHandler, this,
         placeholders::_1, placeholders::_2, placeholders::_3);
+
 	_fun_callbacks[ID_SEARCH_USER_REQ] = std::bind(&LogicSystem::SearchInfo, this,
         placeholders::_1, placeholders::_2, placeholders::_3);
+
 	_fun_callbacks[ID_ADD_FRIEND_REQ] = std::bind(&LogicSystem::AddFriendApply, this,
         placeholders::_1, placeholders::_2, placeholders::_3);
+		
 	_fun_callbacks[ID_AUTH_FRIEND_REQ] = std::bind(&LogicSystem::AuthFriendApply, this,
     placeholders::_1, placeholders::_2, placeholders::_3);
+
 	_fun_callbacks[ID_TEXT_CHAT_MSG_REQ] = std::bind(&LogicSystem::DealChatTextMsg, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
+
+	_fun_callbacks[ID_HEART_BEAT_REQ] = std::bind(&LogicSystem::HeartBeatHandler, this,
+        placeholders::_1, placeholders::_2, placeholders::_3);
 }
 
 LogicSystem::LogicSystem():_b_stop(false){
@@ -225,7 +243,7 @@ void LogicSystem::LoginHandler(std::shared_ptr<CSession> session, const short &m
 		RedisMgr::GetInstance()->Set(uid_session_key, session->GetSessionId());
 	}
 
-	RedisMgr::GetInstance()->IncreaseCount(server_name);
+	// RedisMgr::GetInstance()->IncreaseCount(server_name);
     return;
 }
 

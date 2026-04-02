@@ -40,6 +40,10 @@ public:
 	void NotifyOffline(int uid);
 	//处理异常连接
 	void DealExceptionSession();
+	//判断心跳是否过期
+	bool IsHeartbeatExpired(std::time_t& now);
+	//更新心跳
+	void UpdateHeartbeat();
 	
 private:
 	void asyncReadFull(std::size_t maxLength, std::function<void(const boost::system::error_code& , std::size_t)> handler);
@@ -65,6 +69,7 @@ private:
 	std::atomic<time_t> _last_heartbeat;
 	//session 锁
 	std::mutex _session_mtx;
+	
 };
 
 

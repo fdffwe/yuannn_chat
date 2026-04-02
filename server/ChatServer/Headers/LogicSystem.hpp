@@ -39,6 +39,8 @@ public:
 
 	void DealChatTextMsg(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
 	
+	void HeartBeatHandler(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data);
+
 	private:
 	LogicSystem();
 	void DealMsg();

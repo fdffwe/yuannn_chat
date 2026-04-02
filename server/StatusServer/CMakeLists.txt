@@ -33,6 +33,8 @@ set(Sources
     Sources/MysqlMgr.cpp
     Sources/StatusServiceImpl.cpp
     Sources/StatusServer.cpp
+    Sources/DistLock.cpp
+
 
 
 )
@@ -44,6 +46,7 @@ set(Headers
     Headers/MysqlDAO.hpp
     Headers/MysqlMgr.hpp
     Headers/StatusServiceImpl.hpp
+    Headers/DistLock.hpp
 
 )
 

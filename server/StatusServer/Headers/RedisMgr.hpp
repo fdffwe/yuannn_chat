@@ -109,9 +109,23 @@ public:
     bool HSet(const char* key, const char* hkey, const char* hvalue, size_t hvaluelen);
     std::string HGet(const std::string &key, const std::string &hkey);
     bool Del(const std::string &key);
+    bool HDel(const std::string& key, const std::string& field);
+
     bool ExistsKey(const std::string &key);
     void Close();
 
+    // lock
+    std::string acquireLock(const std::string& lockName,
+		int lockTimeout, int acquireTimeout);
+
+	bool releaseLock(const std::string& lockName,
+		const std::string& identifier);
+
+    void IncreaseCount(std::string server_name);
+	void DecreaseCount(std::string server_name);
+	void InitCount(std::string server_name);
+	void DelCount(std::string server_name);
+    
 private: 
     RedisMgr();
     std::unique_ptr<RedisConPool> _con_pool;
