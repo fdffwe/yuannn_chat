@@ -193,6 +193,41 @@ Status ChatServiceImpl::NotifyKickUser(::grpc::ServerContext* context, const Kic
 	return Status::OK;
 }
 
+Status ChatServiceImpl::FetchMessages(::grpc::ServerContext* context, const FetchMsgsReq* request, FetchMsgsRsp* reply) {
+	int thread_id = request->thread_id();
+	long long since_id = request->since_id();
+	int limit = request->limit();
+	if (limit <= 0) limit = 100;
+
+	std::vector<DbMessage> db_msgs;
+	// fetch one extra to determine has_more
+	bool ok = MysqlMgr::GetInstance()->GetMessages(thread_id, since_id, limit + 1, db_msgs);
+	if (!ok) {
+		reply->set_error(ErrorCodes::RPCFailed);
+		return Status::OK;
+	}
+
+	bool has_more = false;
+	if ((int)db_msgs.size() > limit) {
+		has_more = true;
+	}
+
+	int n = std::min((int)db_msgs.size(), limit);
+	for (int i = 0; i < n; ++i) {
+		auto &m = db_msgs[i];
+		auto entry = reply->add_messages();
+		entry->set_message_id(m.message_id);
+		entry->set_thread_id(m.thread_id);
+		entry->set_fromuid(m.fromuid);
+		entry->set_touid(m.touid);
+		entry->set_content(m.content);
+		entry->set_created_at(m.created_at);
+	}
+	reply->set_error(ErrorCodes::Success);
+	reply->set_has_more(has_more);
+	return Status::OK;
+}
+
 void ChatServiceImpl::RegisterServer(std::shared_ptr<CServer> pServer)
 {
 	_p_server = pServer;

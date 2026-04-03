@@ -23,6 +23,8 @@ using message::TextChatMsgRsp;
 using message::TextChatData;
 using message::KickUserReq;
 using message::KickUserRsp;
+using message::FetchMsgsReq;
+using message::FetchMsgsRsp;
 
 
 class ChatServiceImpl final: public ChatService::Service
@@ -37,6 +39,9 @@ public:
 
 	Status NotifyTextChatMsg(::grpc::ServerContext* context, 
 		const TextChatMsgReq* request, TextChatMsgRsp* response) override;
+
+	Status FetchMessages(::grpc::ServerContext* context,
+		const FetchMsgsReq* request, FetchMsgsRsp* response) override;
 
 	bool GetBaseInfo(std::string base_key, int uid, std::shared_ptr<UserInfo>& userinfo);
 

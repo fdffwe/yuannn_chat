@@ -55,3 +55,15 @@ bool MysqlMgr::GetApplyList(int touid,
 bool MysqlMgr::GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo> >& user_info) {
 	return _dao.GetFriendList(self_id, user_info);
 }
+
+bool MysqlMgr::GetMessages(int thread_id, long long since_id, int limit, std::vector<DbMessage>& out) {
+    return _dao.GetMessages(thread_id, since_id, limit, out);
+}
+
+long long MysqlMgr::GetPrivateThread(int user1_id, int user2_id) {
+	return _dao.GetPrivateThread(user1_id, user2_id);
+}
+
+long long MysqlMgr::CreatePrivateThread(int user1_id, int user2_id) {
+	return _dao.CreatePrivateThread(user1_id, user2_id);
+}

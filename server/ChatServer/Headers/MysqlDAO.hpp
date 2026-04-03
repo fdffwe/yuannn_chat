@@ -96,7 +96,21 @@ public:
     bool AuthFriendApply(const int& from, const int& to);
     bool AddFriend(const int& from, const int& to, const std::string& applicant_back, const std::string& acceptor_back);
     bool GetApplyList(int touid, std::vector<std::shared_ptr<ApplyInfo>>& applyList, int offset, int limit );
-	bool GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo> >& user_info);
+    bool GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo> >& user_info);
+    bool GetMessages(int thread_id, long long since_id, int limit, std::vector<struct DbMessage>& out);
+    // 查找或创建私聊会话
+    // 返回 thread_id 或 -1 表示失败
+    long long GetPrivateThread(int user1_id, int user2_id);
+    long long CreatePrivateThread(int user1_id, int user2_id);
 private:
     std::unique_ptr<MySqlPool> pool_;
+};
+
+struct DbMessage {
+    long long message_id;
+    int thread_id;
+    int fromuid;
+    int touid;
+    std::string content;
+    long long created_at; // ms since epoch
 };

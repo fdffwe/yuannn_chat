@@ -19,6 +19,9 @@ public:
     bool AddFriend(const int& from, const int& to, const std::string& applicant_back, const std::string& acceptor_back);
     bool GetApplyList(int touid, std::vector<std::shared_ptr<ApplyInfo>>& applyList, int begin, int limit=10);
 	bool GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo> >& user_info);
+    bool GetMessages(int thread_id, long long since_id, int limit, std::vector<DbMessage>& out);
+    long long GetPrivateThread(int user1_id, int user2_id);
+    long long CreatePrivateThread(int user1_id, int user2_id);
 
 private:
     MysqlMgr();

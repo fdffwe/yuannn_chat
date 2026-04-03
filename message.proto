@@ -45,6 +45,7 @@ service ChatService {
 	rpc NotifyAuthFriend(AuthFriendReq) returns (AuthFriendRsp) {}
 	rpc NotifyTextChatMsg(TextChatMsgReq) returns (TextChatMsgRsp){}
 	rpc NotifyKickUser(KickUserReq) returns (KickUserRsp){}
+    rpc FetchMessages(FetchMsgsReq) returns (FetchMsgsRsp) {}
 }
 message AddFriendReq {
 	int32  applyuid = 1;
@@ -103,6 +104,27 @@ message TextChatMsgRsp {
 	int32 fromuid = 2;
 	int32 touid = 3; 
 	repeated TextChatData textmsgs = 4;
+}
+
+message MessageEntry {
+	int64 message_id = 1;
+	int32 thread_id = 2;
+	int32 fromuid = 3;
+	int32 touid = 4;
+	string content = 5;
+	int64 created_at = 6; // unix timestamp (ms)
+}
+
+message FetchMsgsReq {
+	int32 thread_id = 1;
+	int64 since_id = 2; // exclusive, return messages with message_id > since_id
+	int32 limit = 3; // max number of messages to return
+}
+
+message FetchMsgsRsp {
+	int32 error = 1;
+	repeated MessageEntry messages = 2;
+	bool has_more = 3;
 }
 message KickUserReq{
 	int32 uid = 1;
