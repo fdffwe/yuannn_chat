@@ -66,6 +66,8 @@ enum MSG_IDS {
 	ID_NOTIFY_OFF_LINE_REQ = 1021, //通知用户下线
 	ID_HEART_BEAT_REQ = 1023,      //心跳请求
 	ID_HEARTBEAT_RSP = 1024,       //心跳回复
+	ID_FETCH_MSGS_REQ = 1025,      // 拉取历史消息请求
+	ID_FETCH_MSGS_RSP = 1026,      // 拉取历史消息回复
 };
 
 #define USERIPPREFIX  "uip_"

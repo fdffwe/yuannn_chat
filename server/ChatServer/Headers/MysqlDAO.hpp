@@ -98,10 +98,14 @@ public:
     bool GetApplyList(int touid, std::vector<std::shared_ptr<ApplyInfo>>& applyList, int offset, int limit );
     bool GetFriendList(int self_id, std::vector<std::shared_ptr<UserInfo> >& user_info);
     bool GetMessages(int thread_id, long long since_id, int limit, std::vector<struct DbMessage>& out);
+    // 获取针对某个接收用户的消息增量（用于客户端登录拉取离线消息）
+    bool GetMessagesForUser(int to_uid, long long since_id, int limit, std::vector<struct DbMessage>& out);
     // 查找或创建私聊会话
     // 返回 thread_id 或 -1 表示失败
     long long GetPrivateThread(int user1_id, int user2_id);
     long long CreatePrivateThread(int user1_id, int user2_id);
+    // 插入消息并返回生成的 message_id
+    bool AddChatMsg(long long thread_id, int fromuid, int touid, const std::string &content, long long &out_message_id);
 private:
     std::unique_ptr<MySqlPool> pool_;
 };

@@ -133,6 +133,13 @@ ChatDialog::ChatDialog(QWidget *parent) :
     connect(ui->con_user_list, &ContactUserList::sig_switch_friend_info_page,
             this,&ChatDialog::slot_friend_info_page);
 
+    // 当历史拉取完成时，如果当前聊天是该 peer，刷新聊天页面以展示包含自发的消息
+    connect(TcpMgr::GetInstance().get(), &TcpMgr::sig_history_fetched, this, [this](int peer_uid){
+        if (_cur_chat_uid == peer_uid) {
+            SetSelectChatPage(peer_uid);
+        }
+    });
+
     //设置中心部件为chatpage
     ui->stackedWidget->setCurrentWidget(ui->chat_page);
 
@@ -202,8 +209,16 @@ void ChatDialog::slot_item_clicked(QListWidgetItem *item)
        auto chat_wid = qobject_cast<ChatUserWid*>(customItem);
        auto user_info = chat_wid->GetUserInfo();
        //跳转到聊天界面
-       ui->chat_page->SetUserInfo(user_info);
-       _cur_chat_uid = user_info->_uid;
+        // use latest FriendInfo from UserMgr so history (including self messages) is up-to-date
+        auto fi_ptr = UserMgr::GetInstance()->GetFriendById(user_info->_uid);
+        if (fi_ptr) {
+            auto uptr = std::make_shared<UserInfo>(fi_ptr);
+            ui->chat_page->SetUserInfo(uptr);
+            _cur_chat_uid = fi_ptr->_uid;
+        } else {
+            ui->chat_page->SetUserInfo(user_info);
+            _cur_chat_uid = user_info->_uid;
+        }
        return;
    }
 }
@@ -211,7 +226,7 @@ void ChatDialog::slot_item_clicked(QListWidgetItem *item)
 void ChatDialog::slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg)
 {
     auto find_iter = _chat_items_added.find(msg->_from_uid);
-    if(find_iter != _chat_items_added.end()){
+        if(find_iter != _chat_items_added.end()){
         qDebug() << "set chat item msg, uid is " << msg->_from_uid;
         QWidget *widget = ui->chat_user_list->itemWidget(find_iter.value());
         auto chat_wid = qobject_cast<ChatUserWid*>(widget);
@@ -219,9 +234,8 @@ void ChatDialog::slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg)
             return;
         }
         chat_wid->updateLastMsg(msg->_chat_msgs);
-        //更新当前聊天页面记录
+        //更新当前聊天页面记录（UserMgr 已在接收历史时写入）
         UpdateChatMsg(msg->_chat_msgs);
-        UserMgr::GetInstance()->AppendFriendChatMsg(msg->_from_uid,msg->_chat_msgs);
         return;
     }
 
@@ -235,7 +249,6 @@ void ChatDialog::slot_text_chat_msg(std::shared_ptr<TextChatMsg> msg)
     //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
     item->setSizeHint(chat_user_wid->sizeHint());
     chat_user_wid->updateLastMsg(msg->_chat_msgs);
-     UserMgr::GetInstance()->AppendFriendChatMsg(msg->_from_uid,msg->_chat_msgs);
     ui->chat_user_list->insertItem(0, item);
     ui->chat_user_list->setItemWidget(item, chat_user_wid);
     _chat_items_added.insert(msg->_from_uid, item);
@@ -277,11 +290,11 @@ void ChatDialog::CloseFindDlg()
 
 void ChatDialog::UpdateChatMsg(std::vector<std::shared_ptr<TextChatData> > msgdata)
 {
-    for(auto & msg : msgdata){
-        if(msg->_from_uid != _cur_chat_uid){
-            break;
+    for (auto &msg : msgdata) {
+        // append messages that belong to the current chat peer
+        if (msg->_from_uid != _cur_chat_uid && msg->_to_uid != _cur_chat_uid) {
+            continue;
         }
-
         ui->chat_page->AppendChatMsg(msg);
     }
 }
@@ -361,22 +374,22 @@ void ChatDialog::addChatUserList()
 
     //模拟测试条目
     // 创建QListWidgetItem，并设置自定义的widget
-    for(int i = 0; i < 13; i++){
-        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
-        int str_i = randomValue % strs.size();
-        int head_i = i % heads.size();
-        int name_i = randomValue % names.size();
+    // for(int i = 0; i < 13; i++){
+    //     int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
+    //     int str_i = randomValue % strs.size();
+    //     int head_i = i % heads.size();
+    //     int name_i = randomValue % names.size();
 
-        auto *chat_user_wid = new ChatUserWid();
-        auto user_info = std::make_shared<UserInfo>(0,names[name_i],
-                                                    names[name_i],heads[head_i],0,strs[str_i]);
-        chat_user_wid->SetInfo(user_info);
-        QListWidgetItem *item = new QListWidgetItem;
-        //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
-        item->setSizeHint(chat_user_wid->sizeHint());
-        ui->chat_user_list->addItem(item);
-        ui->chat_user_list->setItemWidget(item, chat_user_wid);
-    }
+    //     auto *chat_user_wid = new ChatUserWid();
+    //     auto user_info = std::make_shared<UserInfo>(0,names[name_i],
+    //                                                 names[name_i],heads[head_i],0,strs[str_i]);
+    //     chat_user_wid->SetInfo(user_info);
+    //     QListWidgetItem *item = new QListWidgetItem;
+    //     //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
+    //     item->setSizeHint(chat_user_wid->sizeHint());
+    //     ui->chat_user_list->addItem(item);
+    //     ui->chat_user_list->setItemWidget(item, chat_user_wid);
+    // }
 
 }
 
@@ -496,9 +509,15 @@ void ChatDialog::SetSelectChatPage(int uid)
            return;
        }
 
-       //设置信息
-       auto user_info = con_item->GetUserInfo();
-       ui->chat_page->SetUserInfo(user_info);
+       // prefer FriendInfo from UserMgr so history is up-to-date
+       int peer_uid = con_item->GetUserInfo()->_uid;
+       auto fi_ptr = UserMgr::GetInstance()->GetFriendById(peer_uid);
+       if (fi_ptr) {
+           auto uptr = std::make_shared<UserInfo>(fi_ptr);
+           ui->chat_page->SetUserInfo(uptr);
+       } else {
+           ui->chat_page->SetUserInfo(con_item->GetUserInfo());
+       }
        return;
     }
 
@@ -528,9 +547,15 @@ void ChatDialog::SetSelectChatPage(int uid)
             return;
         }
 
-        //设置信息
-        auto user_info = con_item->GetUserInfo();
-        ui->chat_page->SetUserInfo(user_info);
+        // prefer FriendInfo from UserMgr so history is up-to-date
+        int peer_uid = con_item->GetUserInfo()->_uid;
+        auto fi_ptr = UserMgr::GetInstance()->GetFriendById(peer_uid);
+        if (fi_ptr) {
+            auto uptr = std::make_shared<UserInfo>(fi_ptr);
+            ui->chat_page->SetUserInfo(uptr);
+        } else {
+            ui->chat_page->SetUserInfo(con_item->GetUserInfo());
+        }
 
         return;
     }

@@ -229,6 +229,45 @@ bool MysqlDao::GetMessages(int thread_id, long long since_id, int limit, std::ve
     }
 }
 
+bool MysqlDao::GetMessagesForUser(int to_uid, long long since_id, int limit, std::vector<DbMessage>& out) {
+    auto con = pool_->getConnection();
+    if (con == nullptr) {
+        return false;
+    }
+
+    Defer defer([this, &con]() { pool_->returnConnection(std::move(con)); });
+
+    try {
+        std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement(
+            "SELECT message_id, thread_id, fromuid, touid, content, UNIX_TIMESTAMP(created_at)*1000 AS created_at "
+            "FROM message WHERE (touid = ? OR fromuid = ?) AND message_id > ? ORDER BY message_id ASC LIMIT ?"));
+
+        pstmt->setInt(1, to_uid);
+        pstmt->setInt(2, to_uid);
+        pstmt->setInt64(3, since_id);
+        pstmt->setInt(4, limit);
+
+        std::unique_ptr<sql::ResultSet> res(pstmt->executeQuery());
+        while (res->next()) {
+            DbMessage m;
+            m.message_id = res->getInt64("message_id");
+            m.thread_id = res->getInt("thread_id");
+            m.fromuid = res->getInt("fromuid");
+            m.touid = res->getInt("touid");
+            try { m.content = res->getString("content"); } catch(...) { m.content = ""; }
+            m.created_at = res->getInt64("created_at");
+            out.push_back(std::move(m));
+        }
+        return true;
+    }
+    catch (sql::SQLException& e) {
+        std::cerr << "SQLException: " << e.what();
+        std::cerr << " (MySQL error code: " << e.getErrorCode();
+        std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        return false;
+    }
+}
+
 long long MysqlDao::GetPrivateThread(int user1_id, int user2_id) {
     // normalize order: smaller id first to match unique constraint
     long long a = std::min((long long)user1_id, (long long)user2_id);
@@ -426,6 +465,32 @@ bool MysqlDao::AddFriend(const int& from, const int& to, const std::string& appl
         std::cerr << "SQLException: " << e.what();
         std::cerr << " (MySQL error code: " << e.getErrorCode();
         std::cerr << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        return false;
+    }
+}
+
+bool MysqlDao::AddChatMsg(long long thread_id, int fromuid, int touid, const std::string &content, long long &out_message_id) {
+    auto con = pool_->getConnection();
+    if (con == nullptr) return false;
+    Defer defer([this, &con]() { pool_->returnConnection(std::move(con)); });
+    try {
+        std::unique_ptr<sql::PreparedStatement> pstmt(con->prepareStatement(
+            "INSERT INTO message (thread_id, fromuid, touid, content, created_at) VALUES (?, ?, ?, ?, NOW())"));
+        pstmt->setUInt64(1, (uint64_t)thread_id);
+        pstmt->setUInt(2, fromuid);
+        pstmt->setUInt(3, touid);
+        pstmt->setString(4, content);
+        pstmt->executeUpdate();
+
+        std::unique_ptr<sql::Statement> stmt(con->createStatement());
+        std::unique_ptr<sql::ResultSet> rs(stmt->executeQuery("SELECT LAST_INSERT_ID() AS id"));
+        if (rs->next()) {
+            out_message_id = rs->getInt64("id");
+            return true;
+        }
+        return false;
+    } catch (sql::SQLException &e) {
+        std::cerr << "AddChatMsg SQLException: " << e.what() << std::endl;
         return false;
     }
 }

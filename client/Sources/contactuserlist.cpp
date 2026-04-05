@@ -83,6 +83,7 @@ void ContactUserList::addContactUserList()
 
     UserMgr::GetInstance()->UpdateContactLoadedCount();
 
+    /*
     // 模拟列表， 创建QListWidgetItem，并设置自定义的widget
     for(int i = 0; i < 13; i++){
         int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
@@ -98,6 +99,7 @@ void ContactUserList::addContactUserList()
         this->addItem(item);
         this->setItemWidget(item, con_user_wid);
     }
+    */
 }
 
 bool ContactUserList::eventFilter(QObject *watched, QEvent *event)

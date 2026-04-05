@@ -60,10 +60,18 @@ bool MysqlMgr::GetMessages(int thread_id, long long since_id, int limit, std::ve
     return _dao.GetMessages(thread_id, since_id, limit, out);
 }
 
+bool MysqlMgr::GetMessagesForUser(int to_uid, long long since_id, int limit, std::vector<DbMessage>& out) {
+	return _dao.GetMessagesForUser(to_uid, since_id, limit, out);
+}
+
 long long MysqlMgr::GetPrivateThread(int user1_id, int user2_id) {
 	return _dao.GetPrivateThread(user1_id, user2_id);
 }
 
 long long MysqlMgr::CreatePrivateThread(int user1_id, int user2_id) {
 	return _dao.CreatePrivateThread(user1_id, user2_id);
+}
+
+bool MysqlMgr::AddChatMsg(long long thread_id, int fromuid, int touid, const std::string &content, long long &out_message_id) {
+    return _dao.AddChatMsg(thread_id, fromuid, touid, content, out_message_id);
 }

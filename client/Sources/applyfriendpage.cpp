@@ -29,12 +29,15 @@ ApplyFriendPage::~ApplyFriendPage()
 
 void ApplyFriendPage::AddNewApply(std::shared_ptr<AddFriendApply> apply)
 {
-    //先模拟头像随机，以后头像资源增加资源服务器后再显示
-    int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
-    int head_i = randomValue % heads.size();
+    // use icon provided by server if available; otherwise fall back to a default head
 	auto* apply_item = new ApplyFriendItem();
+    QString icon = apply->_icon.isEmpty() ? QString("") : apply->_icon;
+    if (icon.isEmpty()) {
+        // fallback: use first head as placeholder (do not randomize to avoid showing user's own avatar accidentally)
+        icon = heads.front();
+    }
     auto apply_info = std::make_shared<ApplyInfo>(apply->_from_uid,
-             apply->_name, apply->_desc,heads[head_i], apply->_name, 0, 0);
+             apply->_name, apply->_desc, icon, apply->_name, 0, 0);
     apply_item->SetInfo( apply_info);
 	QListWidgetItem* item = new QListWidgetItem;
 	//qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
@@ -66,10 +69,11 @@ void ApplyFriendPage::loadApplyList()
     //添加好友申请
     auto apply_list = UserMgr::GetInstance()->GetApplyList();
     for(auto &apply: apply_list){
-        int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
-        int head_i = randomValue % heads.size();
         auto* apply_item = new ApplyFriendItem();
-        apply->SetIcon(heads[head_i]);
+        // keep server-provided icon if present; otherwise set a placeholder
+        if (apply->_icon.isEmpty()) {
+            apply->SetIcon(heads.front());
+        }
         apply_item->SetInfo(apply);
         QListWidgetItem* item = new QListWidgetItem;
         //qDebug()<<"chat_user_wid sizeHint is " << chat_user_wid->sizeHint();
@@ -94,6 +98,7 @@ void ApplyFriendPage::loadApplyList()
             });
     }
 
+    /*
     // 模拟假数据，创建QListWidgetItem，并设置自定义的widget
     for(int i = 0; i < 13; i++){
         int randomValue = QRandomGenerator::global()->bounded(100); // 生成0到99之间的随机整数
@@ -119,6 +124,7 @@ void ApplyFriendPage::loadApplyList()
             authFriend->show();
         });
     }
+    */
 }
 
 void ApplyFriendPage::slot_auth_rsp(std::shared_ptr<AuthRsp> auth_rsp) {

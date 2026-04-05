@@ -159,6 +159,15 @@ void TcpMgr::initHandlers()
             UserMgr::GetInstance()->AppendFriendList(jsonObj["friend_list"].toArray());
         }
 
+        // 登录成功后，向服务器请求拉取离线/历史消息（since_id 先使用 0）
+        QJsonObject fetchObj;
+        fetchObj["uid"] = uid;
+        fetchObj["since_id"] = 0; // 首次同步
+        fetchObj["limit"] = 200;
+        QJsonDocument fetchDoc(fetchObj);
+        QByteArray fetchData = fetchDoc.toJson(QJsonDocument::Compact);
+        emit TcpMgr::GetInstance()->sig_send_data(ReqId::ID_FETCH_MSGS_REQ, fetchData);
+
         qDebug() << "TcpMgr: emitting sig_swich_chatdlg() to switch to chat UI";
         emit sig_swich_chatdlg();
     });
@@ -471,6 +480,68 @@ void TcpMgr::initHandlers()
 
         qDebug() << "Receive Heart Beat Msg Success" ;
 
+    });
+
+    // 拉取历史消息响应处理
+    _handlers.insert(ID_FETCH_MSGS_RSP, [this](ReqId id, int len, QByteArray data) {
+        Q_UNUSED(len);
+        qDebug() << "handle id is " << id << " data is " << data;
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+        if (jsonDoc.isNull() || !jsonDoc.isObject()) {
+            qDebug() << "Failed to parse fetch msgs response";
+            return;
+        }
+        QJsonObject jsonObj = jsonDoc.object();
+        if (!jsonObj.contains("error")) {
+            qDebug() << "FetchMsgsRsp missing error field";
+            return;
+        }
+        int err = jsonObj["error"].toInt();
+        if (err != ErrorCodes::SUCCESS) {
+            qDebug() << "FetchMsgsRsp error " << err;
+            return;
+        }
+        QJsonArray msgs = jsonObj["messages"].toArray();
+        qDebug() << "FetchMsgsRsp contains" << msgs.size() << "messages";
+        // group messages by peer id (the other user in the conversation)
+        QMap<int, std::vector<std::shared_ptr<TextChatData>>> map;
+        int self_uid = 0;
+        if (jsonObj.contains("uid")) {
+            self_uid = jsonObj["uid"].toInt();
+        } else if (UserMgr::GetInstance()->GetUserInfo()) {
+            self_uid = UserMgr::GetInstance()->GetUserInfo()->_uid;
+        }
+            for (auto v : msgs) {
+                auto mo = v.toObject();
+                qDebug() << "msg entry:" << mo;
+                long long mid = mo["message_id"].toVariant().toLongLong();
+                QString msgid = QString::number(mid);
+                QString content = mo["content"].toString();
+                int fromuid = mo["fromuid"].toInt();
+                int touid = mo["touid"].toInt();
+                qDebug() << "parsed msg: mid=" << mid << " from=" << fromuid << " to=" << touid << " content=" << content;
+                auto mptr = std::make_shared<TextChatData>(msgid, content, fromuid, touid);
+                int peer = (fromuid == self_uid) ? touid : fromuid;
+                map[peer].push_back(mptr);
+            }
+            for (auto it = map.begin(); it != map.end(); ++it) {
+                UserMgr::GetInstance()->AppendFriendChatMsg(it.key(), it.value());
+                // 追加到本地内存
+                QJsonArray arr;
+                for (auto &mptr : it.value()) {
+                    if (mptr->_from_uid == self_uid) continue; // 过滤自己发送的消息
+                    QJsonObject mo;
+                    mo["content"] = mptr->_msg_content;
+                    mo["msgid"] = mptr->_msg_id;
+                    arr.append(mo);
+                }
+                if (!arr.isEmpty()) {
+                    auto text_msg_ptr = std::make_shared<TextChatMsg>(it.key(), UserMgr::GetInstance()->GetUid(), arr);
+                    emit sig_text_chat_msg(text_msg_ptr);
+                }
+                // 通知界面该 peer 的历史已拉取（包含己方消息），UI 可据此刷新显示
+                emit sig_history_fetched(it.key());
+            }
     });
 
 }

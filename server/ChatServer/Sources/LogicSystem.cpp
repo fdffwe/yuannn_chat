@@ -35,6 +35,9 @@ void LogicSystem::RegisterCallBacks() {
 	_fun_callbacks[ID_TEXT_CHAT_MSG_REQ] = std::bind(&LogicSystem::DealChatTextMsg, this,
 		placeholders::_1, placeholders::_2, placeholders::_3);
 
+	_fun_callbacks[ID_FETCH_MSGS_REQ] = std::bind(&LogicSystem::FetchMessagesHandler, this,
+		placeholders::_1, placeholders::_2, placeholders::_3);
+
 	_fun_callbacks[ID_HEART_BEAT_REQ] = std::bind(&LogicSystem::HeartBeatHandler, this,
         placeholders::_1, placeholders::_2, placeholders::_3);
 }
@@ -311,6 +314,49 @@ void LogicSystem::SearchInfo(std::shared_ptr<CSession> session, const short& msg
     if (GetUserByUid(uid_str, rtvalue)) {}
     else GetUserByName(uid_str, rtvalue);
 	return;
+}
+
+void LogicSystem::FetchMessagesHandler(std::shared_ptr<CSession> session, const short& msg_id, const string& msg_data) {
+	Json::Reader reader;
+	Json::Value root;
+	reader.parse(msg_data, root);
+	int uid = 0;
+	long long since_id = 0;
+	int limit = 100;
+	if (root.isMember("uid")) uid = root["uid"].asInt();
+	if (root.isMember("since_id")) since_id = root["since_id"].asInt64();
+	if (root.isMember("limit")) limit = root["limit"].asInt();
+
+	std::cout << "FetchMessagesHandler called: uid=" << uid << " since_id=" << since_id << " limit=" << limit << std::endl;
+
+	Json::Value rtvalue;
+	rtvalue["error"] = ErrorCodes::Success;
+
+	std::vector<DbMessage> msgs;
+	bool ok = MysqlMgr::GetInstance()->GetMessagesForUser(uid, since_id, limit, msgs);
+	std::cout << "GetMessagesForUser returned " << msgs.size() << " messages for uid=" << uid << std::endl;
+	if (!ok) {
+		rtvalue["error"] = ErrorCodes::Error_Json; // reuse an error code
+		session->Send(rtvalue.toStyledString(), ID_FETCH_MSGS_RSP);
+		return;
+	}
+
+	for (auto &m : msgs) {
+		Json::Value mo;
+		mo["message_id"] = Json::Value::Int64(m.message_id);
+		mo["thread_id"] = m.thread_id;
+		mo["fromuid"] = m.fromuid;
+		mo["touid"] = m.touid;
+		mo["content"] = m.content;
+		mo["created_at"] = Json::Value::Int64(m.created_at);
+		rtvalue["messages"].append(mo);
+	}
+	// include target uid in response so client can determine self uid when processing
+	rtvalue["uid"] = uid;
+	// has_more: if we returned exactly limit, indicate possibly more
+	rtvalue["has_more"] = (int)msgs.size() >= limit;
+
+	session->Send(rtvalue.toStyledString(), ID_FETCH_MSGS_RSP);
 }
 
 bool LogicSystem::isPureDigit(const std::string& str)
@@ -636,11 +682,34 @@ void LogicSystem::DealChatTextMsg(std::shared_ptr<CSession> session, const short
 
     const Json::Value  arrays = root["text_array"];
 
-    Json::Value  rtvalue;
-    rtvalue["error"] = ErrorCodes::Success;
-    rtvalue["text_array"] = arrays;
-    rtvalue["fromuid"] = uid;
-    rtvalue["touid"] = touid;
+	Json::Value  rtvalue;
+	rtvalue["error"] = ErrorCodes::Success;
+	rtvalue["fromuid"] = uid;
+	rtvalue["touid"] = touid;
+
+	// 确保存在私聊 thread_id
+	long long thread_id = MysqlMgr::GetInstance()->GetPrivateThread(uid, touid);
+	if (thread_id <= 0) {
+		thread_id = MysqlMgr::GetInstance()->CreatePrivateThread(uid, touid);
+	}
+
+	// 处理每条消息：先入库，得到 message_id，然后构建返回与转发内容
+	Json::Value processed_array(Json::arrayValue);
+	for (const auto& txt_obj : arrays) {
+		auto content = txt_obj["content"].asString();
+		auto client_msgid = txt_obj["msgid"].asString();
+
+		long long server_msg_id = 0;
+		bool wrote = MysqlMgr::GetInstance()->AddChatMsg(thread_id, uid, touid, content, server_msg_id);
+
+		Json::Value element;
+		element["content"] = content;
+		element["msgid"] = client_msgid;
+		if (wrote) element["message_id"] = Json::Value::Int64(server_msg_id);
+		else element["message_id"] = Json::Value::Int64(0);
+		processed_array.append(element);
+	}
+	rtvalue["text_array"] = processed_array;
 
     Defer defer([this, &rtvalue, session]() {
         std::string return_str = rtvalue.toStyledString();
@@ -675,15 +744,13 @@ void LogicSystem::DealChatTextMsg(std::shared_ptr<CSession> session, const short
     TextChatMsgReq text_msg_req;
     text_msg_req.set_fromuid(uid);
     text_msg_req.set_touid(touid);
-    for (const auto& txt_obj : arrays) {
-        auto content = txt_obj["content"].asString();
-        auto msgid = txt_obj["msgid"].asString();
-        std::cout << "content is " << content << std::endl;
-        std::cout << "msgid is " << msgid << std::endl;
-        auto *text_msg = text_msg_req.add_textmsgs();
-        text_msg->set_msgid(msgid);
-        text_msg->set_msgcontent(content);
-    }
+	for (const auto& txt_obj : processed_array) {
+		auto content = txt_obj["content"].asString();
+		auto msgid = txt_obj["msgid"].asString();
+		auto *text_msg = text_msg_req.add_textmsgs();
+		text_msg->set_msgid(msgid);
+		text_msg->set_msgcontent(content);
+	}
 
 
     //发送通知 todo...
