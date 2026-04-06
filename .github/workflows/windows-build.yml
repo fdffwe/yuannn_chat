@@ -23,45 +23,35 @@ jobs:
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
-          # 确保安装了所有需要的模块
-          modules: 'qtnetwork qtsql' 
           install-deps: 'true'
 
       - name: 3. 安装依赖 (vcpkg)
         run: |
-          # 根据你的 CMakeLists.txt，目前只需要 boost 的这两个组件
           vcpkg install boost-system:x64-windows boost-filesystem:x64-windows
 
       - name: 4. 配置与编译
         shell: pwsh
         run: |
-          # 创建一个临时的构建目录
           mkdir build_tmp
           cd build_tmp
-          
-          # 指向你的 client 文件夹（注意大小写，根据你之前的 ls 结果是小写 client）
+          # 确保指向 client 文件夹
           cmake ../client -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
-          
-          # 运行编译
           cmake --build . --config Release
 
       - name: 5. 提取依赖并打包 (windeployqt)
         shell: pwsh
         run: |
-          # 【关键点】根据你的 CMake 配置，exe 会生成在 client/build/bin/Release 
-          # 我们先进入那个目录
+          # 根据你的 CMakeLists.txt，生成路径被强制改到了 client/build/bin
+          # 这里的 Release 是 CMake 自动创建的子目录
           cd client/build/bin/Release
           
-          # 检查一下 exe 是否真的在那（方便报错时排查）
+          echo "Checking directory: $(Get-Location)"
           ls
           
-          # 运行打包工具，补齐 Qt 运行库
+          # 运行打包工具。注意：你的项目在 CMake 里叫 wechat
           windeployqt wechat.exe
           
-          # 拷贝所需的配置文件（如果你项目根目录有 config.ini 之类的，记得在这里拷贝）
-          # cp ../../../../config.ini . 
-          
-          # 压缩当前文件夹下的所有内容（exe + dlls）
+          # 压缩生成的结果
           Compress-Archive -Path * -DestinationPath ../../../../YUANNN_Chat_Windows.zip
 
       - name: 6. 上传安装包
