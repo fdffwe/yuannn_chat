@@ -1,4 +1,4 @@
-name: Windows Build
+name: YUANNN-Chat Windows Build
 
 on:
   push:
@@ -12,20 +12,21 @@ jobs:
 
     steps:
       - name: 1. 拉取代码
-        uses: actions/checkout@v4 # 升级到 v4
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: 2. 安装 Qt 环境
-        uses: jurplel/install-qt-action@v3 # 这个插件目前 v3 是稳定的，不用动
+        uses: jurplel/install-qt-action@v3
         with:
-          version: '5.15.2'
+          version: '5.15.2'      # 如果你用的是 Qt6，请改为 6.x.x
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
           install-deps: 'true'
 
       - name: 3. 安装依赖 (vcpkg)
+        # 这一步会自动利用 GitHub 的缓存，只有依赖变动时才会重新下载编译
         run: |
           vcpkg install boost-asio:x64-windows
           vcpkg install protobuf:x64-windows
@@ -33,22 +34,39 @@ jobs:
           vcpkg install nlohmann-json:x64-windows
 
       - name: 4. 配置与编译
-        run: |
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
-          cmake --build . --config Release
-
-      - name: 5. 提取并打包 (windeployqt)
         shell: pwsh
         run: |
-          cd build/Release
-          # 确保这里的可执行文件名和你的项目生成的一致
-          windeployqt LLFC_Chat.exe 
-          Compress-Archive -Path * -DestinationPath ../../LLFC_Chat_Windows.zip
+          # 自动列出当前目录，方便排查 CMakeLists.txt 在哪
+          echo "Current directory contents:"
+          ls
+          
+          mkdir build
+          cd build
+          # 【核心修改点】
+          # 如果你的 CMakeLists.txt 在根目录，下面请用 cmake ..
+          # 如果在 Client 文件夹，下面请用 cmake ../Client
+          cmake ../Client -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
+          
+          # 运行编译
+          cmake --build . --config Release
 
-      - name: 6. 上传结果 (Artifacts)
-        uses: actions/upload-artifact@v4 # 【核心修改】这里必须是 v4
+      - name: 5. 提取依赖并打包 (windeployqt)
+        shell: pwsh
+        run: |
+          # 进入生成 .exe 的目录
+          # 注意：路径可能是 build/Release 或者 build/bin/Release，取决于你的 CMake 配置
+          cd build/Release
+          
+          # 【极其重要】
+          # 请把下面的 LLFC_Chat.exe 换成你真正的文件名（比如 YUANNN_Chat.exe）
+          # 如果不确定，可以看 CMakeLists.txt 里的 add_executable(xxx ...) 填的是什么
+          windeployqt YUANNN_Chat.exe 
+          
+          # 压缩成 zip
+          Compress-Archive -Path * -DestinationPath ../../YUANNN_Chat_Windows.zip
+
+      - name: 6. 上传安装包
+        uses: actions/upload-artifact@v4
         with:
-          name: LLFC_Chat_Windows_Package
-          path: LLFC_Chat_Windows.zip
+          name: YUANNN-Chat-Windows-Package
+          path: YUANNN_Chat_Windows.zip
