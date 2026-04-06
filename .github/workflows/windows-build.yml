@@ -2,31 +2,30 @@ name: Windows Build
 
 on:
   push:
-    branches: [ main, master ] # 当你推送到这些分支时触发
+    branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
 
 jobs:
   build:
-    runs-on: windows-latest # 使用 GitHub 提供的最新 Windows 虚拟机
+    runs-on: windows-latest
 
     steps:
       - name: 1. 拉取代码
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # 升级到 v4
         with:
-          submodules: recursive # 如果你有子模块，递归拉取
+          submodules: recursive
 
       - name: 2. 安装 Qt 环境
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v3 # 这个插件目前 v3 是稳定的，不用动
         with:
-          version: '5.15.2'      # 这里换成你项目用的 Qt 版本
+          version: '5.15.2'
           host: 'windows'
           target: 'desktop'
-          arch: 'win64_msvc2019_64' # 使用 MSVC 编译器
+          arch: 'win64_msvc2019_64'
           install-deps: 'true'
 
       - name: 3. 安装依赖 (vcpkg)
-        # vcpkg 是微软开发的 C++ 包管理器，GitHub Actions 自带
         run: |
           vcpkg install boost-asio:x64-windows
           vcpkg install protobuf:x64-windows
@@ -34,7 +33,6 @@ jobs:
           vcpkg install nlohmann-json:x64-windows
 
       - name: 4. 配置与编译
-        # 使用 CMake 进行构建
         run: |
           mkdir build
           cd build
@@ -45,13 +43,12 @@ jobs:
         shell: pwsh
         run: |
           cd build/Release
-          # 运行 Qt 自带的打包工具提取 DLL
-          windeployqt YUANNN_Chat.exe
-          # 将所有文件压缩成一个 zip
-          Compress-Archive -Path * -DestinationPath ../../YUANNN_Chat_Windows.zip
+          # 确保这里的可执行文件名和你的项目生成的一致
+          windeployqt LLFC_Chat.exe 
+          Compress-Archive -Path * -DestinationPath ../../LLFC_Chat_Windows.zip
 
       - name: 6. 上传结果 (Artifacts)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # 【核心修改】这里必须是 v4
         with:
-          name: YUANNN_Chat_Windows_Package
-          path: YUANNN_Chat_Windows.zip
+          name: LLFC_Chat_Windows_Package
+          path: LLFC_Chat_Windows.zip
