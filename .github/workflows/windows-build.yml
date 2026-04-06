@@ -1,0 +1,57 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [ main, master ] # 当你推送到这些分支时触发
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest # 使用 GitHub 提供的最新 Windows 虚拟机
+
+    steps:
+      - name: 1. 拉取代码
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive # 如果你有子模块，递归拉取
+
+      - name: 2. 安装 Qt 环境
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.15.2'      # 这里换成你项目用的 Qt 版本
+          host: 'windows'
+          target: 'desktop'
+          arch: 'win64_msvc2019_64' # 使用 MSVC 编译器
+          install-deps: 'true'
+
+      - name: 3. 安装依赖 (vcpkg)
+        # vcpkg 是微软开发的 C++ 包管理器，GitHub Actions 自带
+        run: |
+          vcpkg install boost-asio:x64-windows
+          vcpkg install protobuf:x64-windows
+          vcpkg install grpc:x64-windows
+          vcpkg install nlohmann-json:x64-windows
+
+      - name: 4. 配置与编译
+        # 使用 CMake 进行构建
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
+          cmake --build . --config Release
+
+      - name: 5. 提取并打包 (windeployqt)
+        shell: pwsh
+        run: |
+          cd build/Release
+          # 运行 Qt 自带的打包工具提取 DLL
+          windeployqt YUANNN_Chat.exe
+          # 将所有文件压缩成一个 zip
+          Compress-Archive -Path * -DestinationPath ../../YUANNN_Chat_Windows.zip
+
+      - name: 6. 上传结果 (Artifacts)
+        uses: actions/upload-artifact@v3
+        with:
+          name: YUANNN_Chat_Windows_Package
+          path: YUANNN_Chat_Windows.zip
