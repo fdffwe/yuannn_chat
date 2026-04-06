@@ -19,33 +19,28 @@ jobs:
       - name: 2. 安装 Qt 环境
         uses: jurplel/install-qt-action@v3
         with:
-          version: '5.15.2'      # 如果你用的是 Qt6，请改为 6.x.x
+          version: '5.15.2'
           host: 'windows'
           target: 'desktop'
           arch: 'win64_msvc2019_64'
+          # 确保安装了所有需要的模块
+          modules: 'qtnetwork qtsql' 
           install-deps: 'true'
 
       - name: 3. 安装依赖 (vcpkg)
-        # 这一步会自动利用 GitHub 的缓存，只有依赖变动时才会重新下载编译
         run: |
-          vcpkg install boost-asio:x64-windows
-          vcpkg install protobuf:x64-windows
-          vcpkg install grpc:x64-windows
-          vcpkg install nlohmann-json:x64-windows
+          # 根据你的 CMakeLists.txt，目前只需要 boost 的这两个组件
+          vcpkg install boost-system:x64-windows boost-filesystem:x64-windows
 
       - name: 4. 配置与编译
         shell: pwsh
         run: |
-          # 自动列出当前目录，方便排查 CMakeLists.txt 在哪
-          echo "Current directory contents:"
-          ls
+          # 创建一个临时的构建目录
+          mkdir build_tmp
+          cd build_tmp
           
-          mkdir build
-          cd build
-          # 【核心修改点】
-          # 如果你的 CMakeLists.txt 在根目录，下面请用 cmake ..
-          # 如果在 Client 文件夹，下面请用 cmake ../Client
-          cmake ../Client -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
+          # 指向你的 client 文件夹（注意大小写，根据你之前的 ls 结果是小写 client）
+          cmake ../client -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -G "Visual Studio 17 2022" -A x64
           
           # 运行编译
           cmake --build . --config Release
@@ -53,17 +48,21 @@ jobs:
       - name: 5. 提取依赖并打包 (windeployqt)
         shell: pwsh
         run: |
-          # 进入生成 .exe 的目录
-          # 注意：路径可能是 build/Release 或者 build/bin/Release，取决于你的 CMake 配置
-          cd build/Release
+          # 【关键点】根据你的 CMake 配置，exe 会生成在 client/build/bin/Release 
+          # 我们先进入那个目录
+          cd client/build/bin/Release
           
-          # 【极其重要】
-          # 请把下面的 LLFC_Chat.exe 换成你真正的文件名（比如 YUANNN_Chat.exe）
-          # 如果不确定，可以看 CMakeLists.txt 里的 add_executable(xxx ...) 填的是什么
-          windeployqt YUANNN_Chat.exe 
+          # 检查一下 exe 是否真的在那（方便报错时排查）
+          ls
           
-          # 压缩成 zip
-          Compress-Archive -Path * -DestinationPath ../../YUANNN_Chat_Windows.zip
+          # 运行打包工具，补齐 Qt 运行库
+          windeployqt wechat.exe
+          
+          # 拷贝所需的配置文件（如果你项目根目录有 config.ini 之类的，记得在这里拷贝）
+          # cp ../../../../config.ini . 
+          
+          # 压缩当前文件夹下的所有内容（exe + dlls）
+          Compress-Archive -Path * -DestinationPath ../../../../YUANNN_Chat_Windows.zip
 
       - name: 6. 上传安装包
         uses: actions/upload-artifact@v4
